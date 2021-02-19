@@ -1,0 +1,23 @@
+{
+  "name": "snake_irl",
+  "version": "1.0.0",
+  "description": "snake, but irl",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebSci-Remote-Group-1/snake_irl.git"
+  },
+  "author": "Brooke Baer, Alden Ford, Sean Hale, Elijah Smith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WebSci-Remote-Group-1/snake_irl/issues"
+  },
+  "homepage": "https://github.com/WebSci-Remote-Group-1/snake_irl#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
