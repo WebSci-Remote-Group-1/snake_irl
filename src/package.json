@@ -18,10 +18,14 @@
   },
   "homepage": "https://github.com/WebSci-Remote-Group-1/snake_irl#readme",
   "dependencies": {
+    "bootstrap": "^5.0.0-beta2",
     "express": "^4.17.1"
   },
   "prettier": {
-  	"tabWidth": 2,
-	"singleQuote": true
+    "tabWidth": 2,
+    "singleQuote": true
+  },
+  "devDependencies": {
+    "node-sass-middleware": "^0.11.0"
   }
 }
