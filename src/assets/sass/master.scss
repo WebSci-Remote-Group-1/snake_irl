@@ -1,0 +1,16 @@
+// Google Fonts import
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+$customColor: #F0502E;
+$customColor2: #aabbcc;
+$primaryFont: 'DotGothic16', sans-serif;
+
+
+body {
+	background-color: $customColor2;
+	font-family: $primaryFont;
+}
+
+p {
+	color: $customColor;
+}
