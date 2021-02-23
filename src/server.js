@@ -13,7 +13,11 @@ app.use(
   })
 );
 app.use(express.json()); // JSON extraction (body-parsing)
-app.use(express.static(path.join(__dirname, 'public'))); // setup static folder
+app.use('/', express.static(path.join(__dirname, 'public'))); // setup static folder
+app.use(
+  '/js',
+  express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
+); // Configure bootstrap support
 
 app.listen(port, () => {
   console.log('Listening on *:3000');

@@ -1,16 +1,30 @@
 // Google Fonts import
 @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
 
-$customColor: #F0502E;
+$customColor: #f0502e;
 $customColor2: #aabbcc;
 $primaryFont: 'DotGothic16', sans-serif;
 
-
 body {
-	background-color: $customColor2;
-	font-family: $primaryFont;
+  background-color: $customColor2;
+  background-image: url('https://media.giphy.com/media/l1J9MErMKGsxPkGc0/source.gif');
+  background-size: cover;
+  font-family: $primaryFont;
 }
 
-p {
-	color: $customColor;
+#logo {
+  width: 25%;
+  filter: grayscale(1);
+}
+
+// Styling specifically for the construction blurb
+#construction {
+  margin-top: 35vh;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 35px;
+
+  h1 {
+    text-decoration: underline;
+  }
 }
