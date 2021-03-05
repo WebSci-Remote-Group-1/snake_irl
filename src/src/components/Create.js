@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Create = () => (
-  <div>
-    <h1>THIS IS THE CREATE PAGE</h1>
-  </div>
+  <>
+    <main>
+      <h3>Create a map</h3>
+    </main>
+  </>
 );
 
 export default Create;
