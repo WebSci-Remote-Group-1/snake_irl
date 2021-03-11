@@ -3,28 +3,30 @@ import React, { useState } from 'react';
 
 // Import MaterialUI elements
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 
 // Import homebrewed files
 import '@assets/style/create.scss';
+import Header from '@components/shared/Header';
+import MapSelect from '@components/shared/map-select';
 
 export default function Create() {
   const [click, setClick] = useState(false);
 
   return (
     <>
-      <Grid id="create-space" container justify="center" alignItems="center">
-        <Grid item>
-          <Button
-            disableElevation
-            color={click ? 'primary' : 'secondary'}
-            variant="contained"
-            onClick={() => setClick(!click)}
-          >
-            Create a map
-          </Button>
-        </Grid>
-      </Grid>
+      <Header />
+      <Container>
+        <Button
+          disableElevation
+          color={click ? 'primary' : 'secondary'}
+          variant="contained"
+          onClick={() => setClick(!click)}
+        >
+          Create a map
+        </Button>
+        <MapSelect />
+      </Container>
     </>
   );
 }
