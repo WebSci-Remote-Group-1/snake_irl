@@ -1,0 +1,24 @@
+{
+  "maps": [
+    {
+      "title": "RPI Roundabout",
+      "description": "Go around RPI",
+      "points-of-interest": []
+    },
+    {
+      "title": "Shirley's Temple",
+      "description": "RPI administrative facilities",
+      "points-of-interest": []
+    },
+    {
+      "title": "Trojan Horse Race",
+      "description": "Locations in downtown Troy. Stay safe!",
+      "points-of-interest": []
+    },
+    {
+      "title": "Hudson Parks",
+      "description": "Explore nature in the Hudson Valley",
+      "points-of-interest": []
+    }
+  ]
+}
