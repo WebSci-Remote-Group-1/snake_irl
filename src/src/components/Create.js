@@ -22,7 +22,7 @@ import CloseIcon from '@material-ui/icons/Close';
 // Import homebrewed files
 import '@assets/style/create.scss';
 import Header from '@components/shared/Header';
-import MapSelect from '@components/shared/map-select';
+import MapSelect from '@components/shared/MapSelect';
 
 const StartCreateNewMap = forwardRef((props, ref) => {
   const [open, setOpen] = useState(false);
