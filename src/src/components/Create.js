@@ -1,5 +1,5 @@
 // Import React, tools and helpers
-import React, { useState } from 'react';
+import React, { useState, Component, createRef, forwardRef } from 'react';
 
 // Import MaterialUI elements
 import {
@@ -21,17 +21,43 @@ import '@assets/style/create.scss';
 import Header from '@components/shared/Header';
 import MapSelect from '@components/shared/map-select';
 
-function StartCreateNewMap() {
+const StartCreateNewMap = forwardRef((props, ref) => {
   const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
   const clickOpen = () => {
     setOpen(true);
   };
+
   const clickClose = () => {
     setOpen(false);
   };
+
   const clickCloseAndStart = () => {
     setOpen(false);
-    console.log("This is where we'll begin the map editor");
+    var newMapObj = {
+      title: title,
+      description: description,
+      pointsOfInterest: [],
+    };
+
+    let oldState = ref.current.state.mapData.slice();
+    oldState.push(newMapObj);
+    ref.current.setState({ mapData: oldState });
+  };
+
+  const handleInputUpdate = (e) => {
+    switch (e.target.id) {
+      case 'title':
+        setTitle(e.target.value);
+        break;
+      case 'description':
+        setDescription(e.target.value);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -60,16 +86,17 @@ function StartCreateNewMap() {
                 type="text"
                 fullWidth
                 variant="outlined"
+                onChange={handleInputUpdate}
               />
             </Box>
             <Box mb={2}>
               <TextField
-                autoFocus
                 id="description"
                 label="description"
                 type="text"
                 fullWidth
                 variant="outlined"
+                onChange={handleInputUpdate}
               />
             </Box>
           </form>
@@ -85,23 +112,34 @@ function StartCreateNewMap() {
       </Dialog>
     </>
   );
-}
+});
 
-const Create = () => (
-  <>
-    <Header />
-    <Container>
-      <Box my={2}>
-        <Grid container justify="space-between">
-          <Typography variant="h4">
-            Create a new map or edit one of your existing maps
-          </Typography>
-          <StartCreateNewMap />
-        </Grid>
-      </Box>
-      <MapSelect />
-    </Container>
-  </>
-);
+class Create extends Component {
+  constructor() {
+    super();
+    this.mapSelect = createRef();
+  }
+  render() {
+    return (
+      <>
+        <Header />
+        <Container>
+          <Box my={2}>
+            <Grid container justify="space-between">
+              <Typography variant="h4">
+                Create a new map or edit one of your existing maps
+              </Typography>
+              <StartCreateNewMap
+                mapSelectRef={this.mapSelect}
+                ref={this.mapSelect}
+              />
+            </Grid>
+          </Box>
+          <MapSelect ref={this.mapSelect} />
+        </Container>
+      </>
+    );
+  }
+}
 
 export default Create;

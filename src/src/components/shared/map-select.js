@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 // Import material UI components
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -18,14 +19,25 @@ const MapCard = (props) => (
   </Card>
 );
 
-export default function MapSelect() {
-  return (
-    <Grid container justify="center" alignItems="center" spacing={5}>
-      {Maps['maps'].map((map) => (
-        <Grid item>
-          <MapCard title={map.title} description={map.description} />
-        </Grid>
-      ))}
-    </Grid>
-  );
+class MapSelect extends Component {
+  constructor() {
+    super();
+    this.state = {
+      mapData: Maps['maps'],
+    };
+  }
+
+  render() {
+    return (
+      <Grid container justify="center" alignItems="center" spacing={5}>
+        {this.state.mapData.map((map) => (
+          <Grid item key={map.title}>
+            <MapCard title={map.title} description={map.description} />
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
 }
+
+export default MapSelect;
