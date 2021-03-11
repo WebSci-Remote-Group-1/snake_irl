@@ -1,4 +1,6 @@
 import React from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import Media from 'react-media'; // add Media
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,9 +15,15 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import CreateIcon from '@material-ui/icons/Create';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import ShuffleIcon from '@material-ui/icons/Shuffle';
+import HomeIcon from '@material-ui/icons/Home';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Typography from '@material-ui/core/Typography';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import snakeirl from '@assets/img/512px-snake-irl-transparent.png';
 
@@ -54,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
   fullList: {
     width: 'auto',
   },
+  sidebarHeader: {
+    padding: "16px",
+  },
 }));
 
 export default function Header(props) {
@@ -88,6 +99,28 @@ export default function Header(props) {
     setState({ ...state, [anchor]: open });
   };
 
+  /* For List Items that Link Places!*/
+  function ListItemLink(props) {
+    const { icon, primary, to } = props;
+  
+    const CustomLink = React.useMemo(
+      () =>
+        React.forwardRef((linkProps, ref) => (
+          <Link ref={ref} to={to} {...linkProps} />
+        )),
+      [to],
+    );
+  
+    return (
+      <li>
+        <ListItem button component={CustomLink}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText primary={primary} />
+        </ListItem>
+      </li>
+    );
+  }
+
   /* sidebar */
   const list = (anchor) => ( 
     <div
@@ -98,25 +131,50 @@ export default function Header(props) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+      <Typography className={classes.sidebarHeader} variant="h4">Home</Typography>
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
       </List>
       <Divider />
+      <Typography className={classes.sidebarHeader} variant="h4">Create</Typography>
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+      </List>
+      <Divider />
+      <Typography className={classes.sidebarHeader} variant="h4">Leaderboard</Typography>
+      <List>
       </List>
     </div>
   );
+
+  /* mobile sidebar */
+  const mobileList = (anchor) => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
+      })}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <Typography className={classes.sidebarHeader} variant="h4">Home</Typography>
+      <List>
+        <ListItemLink icon={<HomeIcon />} primary='Home' to='/'/>
+      </List>
+      <Divider />
+      <Typography className={classes.sidebarHeader} variant="h4">Play</Typography>
+      <List>
+        <ListItemLink icon={<PlayArrowIcon />} primary='Mission Select' to='/play'/>
+        <ListItemLink icon={<ShuffleIcon />} primary='Random' to='/play'/>
+      </List>
+      <Divider />
+      <Typography className={classes.sidebarHeader} variant="h4">Leaderboard</Typography>
+      <List>
+        <ListItemLink icon={<FormatListNumberedIcon />} primary='All Time' to='#'/>
+        <ListItemLink icon={<FormatListNumberedIcon />} primary='Monthly' to='#'/>
+        <ListItemLink icon={<FormatListNumberedIcon />} primary='Weekly' to='#'/>
+        <ListItemLink icon={<FormatListNumberedIcon />} primary='Daily' to='#'/>
+      </List>
+    </div>
+  )
 
   return (
     <div>
@@ -132,8 +190,18 @@ export default function Header(props) {
                 onClose={toggleDrawer(anchor, false)}
                 onOpen={toggleDrawer(anchor, true)}
               >
-                {list(anchor)}
-              </SwipeableDrawer>
+              <Media query="(max-width: 599px)">
+                {(matches) =>
+                  matches ? (
+                      /* Mobile */
+                      mobileList(anchor)
+                  ) : (
+                      /* Desktop */
+                      list(anchor)
+                  )
+                }
+              </Media>
+            </SwipeableDrawer>
             <img src={snakeirl} width="90em"/>
             <div className={classes.spacer}/>
             {auth && (
