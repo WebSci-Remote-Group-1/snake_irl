@@ -12,9 +12,12 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  IconButton,
   TextField,
   Typography,
 } from '@material-ui/core';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 // Import homebrewed files
 import '@assets/style/create.scss';
@@ -114,11 +117,61 @@ const StartCreateNewMap = forwardRef((props, ref) => {
   );
 });
 
+class MapEditor extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      map: null,
+    };
+  }
+
+  handleClose = () => this.setState({ open: false });
+
+  render() {
+    return (
+      <>
+        <Dialog fullScreen open={this.state.open} onClose={this.handleClose}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={this.handleClose}
+            aria-label="close"
+          >
+            <CloseIcon />
+          </IconButton>
+          {this.state.map ? (
+            <>
+              <Typography>{this.state.map.title}</Typography>
+
+              <Typography>{this.state.map.description}</Typography>
+            </>
+          ) : null}
+        </Dialog>
+      </>
+    );
+  }
+}
+
 class Create extends Component {
   constructor() {
     super();
     this.mapSelect = createRef();
+    this.mapEditor = createRef();
+    this.state = {
+      clickedMap: null,
+    };
+    this.cardClickHandler = this.cardClickHandler.bind(this);
   }
+
+  // MapSelect click handler
+  cardClickHandler(clickedMap) {
+    this.setState({
+      clickedMap: clickedMap,
+    });
+    this.mapEditor.current.setState({ open: true, map: clickedMap });
+  }
+
   render() {
     return (
       <>
@@ -135,8 +188,12 @@ class Create extends Component {
               />
             </Grid>
           </Box>
-          <MapSelect ref={this.mapSelect} />
+          <MapSelect
+            ref={this.mapSelect}
+            clickHandler={this.cardClickHandler}
+          />
         </Container>
+        <MapEditor ref={this.mapEditor} />
       </>
     );
   }

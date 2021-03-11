@@ -1,27 +1,48 @@
 import React, { Component } from 'react';
+
 // Import material UI components
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import {
+  Card,
+  CardActions,
+  CardActionArea,
+  CardContent,
+  Grid,
+  IconButton,
+  Typography,
+} from '@material-ui/core';
+
+// Import material UI icons
+import DeleteIcon from '@material-ui/icons/Delete';
 
 // Import frontend demo placeholder files
 import Maps from '@assets/frontend-placeholders/created_maps.json';
 
-const MapCard = (props) => (
-  <Card>
-    <CardContent>
-      <Typography variant="h5" gutterBottom>
-        {props.title}
-      </Typography>
-      <Typography>{props.description}</Typography>
-    </CardContent>
-  </Card>
-);
+const MapCard = (props) => {
+  const delegateClick = () =>
+    'clickHandler' in props ? props.clickHandler(props.map) : null;
+
+  return (
+    <Card raised>
+      <CardActionArea id={props.map.title} onClick={delegateClick}>
+        <CardContent>
+          <Typography variant="h5" gutterBottom>
+            {props.map.title}
+          </Typography>
+          <Typography>{props.map.description}</Typography>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        <IconButton aria-label="delete map">
+          <DeleteIcon />
+        </IconButton>
+      </CardActions>
+    </Card>
+  );
+};
 
 class MapSelect extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       mapData: Maps['maps'],
     };
@@ -32,7 +53,7 @@ class MapSelect extends Component {
       <Grid container justify="center" alignItems="center" spacing={5}>
         {this.state.mapData.map((map) => (
           <Grid item key={map.title}>
-            <MapCard title={map.title} description={map.description} />
+            <MapCard map={map} clickHandler={this.props.clickHandler} />
           </Grid>
         ))}
       </Grid>
