@@ -35,11 +35,13 @@ export const MapCard = (props) => {
           <Typography>{props.map.description}</Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <IconButton aria-label="delete map">
-          <DeleteIcon />
-        </IconButton>
-      </CardActions>
+      {!props.noDelete && (
+        <CardActions>
+          <IconButton aria-label="delete map">
+            <DeleteIcon />
+          </IconButton>
+        </CardActions>
+      )}
     </Card>
   );
 };

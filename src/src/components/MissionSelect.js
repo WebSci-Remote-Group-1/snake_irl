@@ -129,7 +129,7 @@ class MissionSelect extends Component {
         />{/* Placeholder */}
       <Box>
         {this.state.mapData.map(map => 
-          <MapCard map={map} clickHandler={() => this.clickHandler(map)} />
+          <MapCard map={map} clickHandler={() => this.clickHandler(map)} noDelete/>
         )}
       </Box>
       <MapPreview open={this.state.open} map={this.state.map} handleClose={() => this.handleClose()}/>
