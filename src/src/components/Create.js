@@ -239,6 +239,7 @@ class Create extends Component {
           <MapSelect
             ref={this.mapSelect}
             clickHandler={this.cardClickHandler}
+            actionItems
           />
         </Container>
         <MapEditor ref={this.mapEditor} />

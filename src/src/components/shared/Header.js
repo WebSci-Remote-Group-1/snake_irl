@@ -202,7 +202,7 @@ export default function Header(props) {
         <ListItemLink
           icon={<PlayArrowIcon />}
           primary="Mission Select"
-          to="/play"
+          to="/select"
         />
         <ListItemLink icon={<ShuffleIcon />} primary="Random" to="/play" />
       </List>
