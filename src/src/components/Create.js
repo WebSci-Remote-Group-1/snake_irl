@@ -1,10 +1,12 @@
 // Import React, tools and helpers
 import React, { useState, Component, createRef, forwardRef } from 'react';
+import Image from 'material-ui-image';
 
 // Import MaterialUI elements
 import {
   Box,
   Button,
+  Card,
   Container,
   Dialog,
   DialogActions,
@@ -13,6 +15,12 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -132,21 +140,62 @@ class MapEditor extends Component {
     return (
       <>
         <Dialog fullScreen open={this.state.open} onClose={this.handleClose}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={this.handleClose}
-            aria-label="close"
-          >
-            <CloseIcon />
-          </IconButton>
-          {this.state.map ? (
-            <>
-              <Typography>{this.state.map.title}</Typography>
-
-              <Typography>{this.state.map.description}</Typography>
-            </>
-          ) : null}
+          <Box mx={4}>
+            <Grid container justify="space-between" alignItems="flex-start">
+              {this.state.map ? (
+                <Box mt={3}>
+                  <Typography variant="h3">{this.state.map.title}</Typography>
+                  <Typography>{this.state.map.description}</Typography>
+                </Box>
+              ) : null}
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={this.handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+            <Box mt={10}>
+              <Grid container justify="space-evenly">
+                <Grid item>
+                  <img
+                    src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.androidbeat.com%2Fwp-content%2Fuploads%2F2014%2F11%2Fgoogle_maps_api.png&f=1&nofb=1"
+                    id="map_ph"
+                  />
+                </Grid>
+                <Grid item>
+                  <TableContainer component={Card} raised>
+                    <Table aria-label="Points of Interest Table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name of Location</TableCell>
+                          <TableCell align="right">Lat</TableCell>
+                          <TableCell align="right">Long</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {this.state.map
+                          ? this.state.map.pointsOfInterest.map((point) => (
+                              <TableRow key={point.name}>
+                                <TableCell component="th" scope="row">
+                                  {point.name}
+                                </TableCell>
+                                <TableCell align="right">{point.lat}</TableCell>
+                                <TableCell align="right">
+                                  {point.long}
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          : null}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
         </Dialog>
       </>
     );

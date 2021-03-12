@@ -26,6 +26,7 @@ import Menu from '@material-ui/core/Menu';
 import Typography from '@material-ui/core/Typography';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import snakeirl from '@assets/img/512px-snake-irl-transparent.png';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 function ElevationScroll(props) {
   const { children, window } = props;
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    width: "90em",
+    width: '90em',
   },
   spacer: {
     flexGrow: 1,
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     width: 'auto',
   },
   sidebarHeader: {
-    padding: "16px",
+    padding: '16px',
   },
 }));
 
@@ -76,23 +77,27 @@ export default function Header(props) {
   const anchor = 'left';
 
   /* for when auth is implemented */
-  const handleChange = (event) => { 
+  const handleChange = (event) => {
     setAuth(event.target.checked);
   };
 
   /* for handling profile menu */
-  const handleMenu = (event) => { 
+  const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   /* for closing profile menu */
-  const handleClose = () => { 
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
   /* drawer toggling logic */
-  const toggleDrawer = (anchor, open) => (event) => { 
-    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
       return;
     }
 
@@ -102,15 +107,15 @@ export default function Header(props) {
   /* For List Items that Link Places!*/
   function ListItemLink(props) {
     const { icon, primary, to } = props;
-  
+
     const CustomLink = React.useMemo(
       () =>
         React.forwardRef((linkProps, ref) => (
           <Link ref={ref} to={to} {...linkProps} />
         )),
-      [to],
+      [to]
     );
-  
+
     return (
       <li>
         <ListItem button component={CustomLink}>
@@ -122,7 +127,7 @@ export default function Header(props) {
   }
 
   /* sidebar */
-  const list = (anchor) => ( 
+  const list = (anchor) => (
     <div
       className={clsx(classes.list, {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
@@ -131,17 +136,24 @@ export default function Header(props) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <Typography className={classes.sidebarHeader} variant="h4">Home</Typography>
+      <Typography className={classes.sidebarHeader} variant="h4">
+        Home
+      </Typography>
       <List>
+        <ListItemLink icon={<HomeIcon />} primary="Home" to="/" />
       </List>
       <Divider />
-      <Typography className={classes.sidebarHeader} variant="h4">Create</Typography>
+      <Typography className={classes.sidebarHeader} variant="h4">
+        Create
+      </Typography>
       <List>
+        <ListItemLink icon={<AddBoxIcon />} primary="Create" to="/create" />
       </List>
       <Divider />
-      <Typography className={classes.sidebarHeader} variant="h4">Leaderboard</Typography>
-      <List>
-      </List>
+      <Typography className={classes.sidebarHeader} variant="h4">
+        Leaderboard
+      </Typography>
+      <List></List>
     </div>
   );
 
@@ -155,55 +167,85 @@ export default function Header(props) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <Typography className={classes.sidebarHeader} variant="h4">Home</Typography>
+      <Typography className={classes.sidebarHeader} variant="h4">
+        Home
+      </Typography>
       <List>
-        <ListItemLink icon={<HomeIcon />} primary='Home' to='/'/>
+        <ListItemLink icon={<HomeIcon />} primary="Home" to="/" />
       </List>
       <Divider />
-      <Typography className={classes.sidebarHeader} variant="h4">Play</Typography>
+      <Typography className={classes.sidebarHeader} variant="h4">
+        Play
+      </Typography>
       <List>
-        <ListItemLink icon={<PlayArrowIcon />} primary='Mission Select' to='/play'/>
-        <ListItemLink icon={<ShuffleIcon />} primary='Random' to='/play'/>
+        <ListItemLink
+          icon={<PlayArrowIcon />}
+          primary="Mission Select"
+          to="/play"
+        />
+        <ListItemLink icon={<ShuffleIcon />} primary="Random" to="/play" />
       </List>
       <Divider />
-      <Typography className={classes.sidebarHeader} variant="h4">Leaderboard</Typography>
+      <Typography className={classes.sidebarHeader} variant="h4">
+        Leaderboard
+      </Typography>
       <List>
-        <ListItemLink icon={<FormatListNumberedIcon />} primary='All Time' to='#'/>
-        <ListItemLink icon={<FormatListNumberedIcon />} primary='Monthly' to='#'/>
-        <ListItemLink icon={<FormatListNumberedIcon />} primary='Weekly' to='#'/>
-        <ListItemLink icon={<FormatListNumberedIcon />} primary='Daily' to='#'/>
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="All Time"
+          to="#"
+        />
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="Monthly"
+          to="#"
+        />
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="Weekly"
+          to="#"
+        />
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="Daily"
+          to="#"
+        />
       </List>
     </div>
-  )
+  );
 
   return (
     <div>
       <ElevationScroll {...props}>
         <AppBar>
           <Toolbar>
-            <IconButton edge="start" onClick={toggleDrawer(anchor, true)} className={classes.menuButton} color="inherit" aria-label="menu">
-              <MenuIcon/>
+            <IconButton
+              edge="start"
+              onClick={toggleDrawer(anchor, true)}
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
+              <MenuIcon />
             </IconButton>
             <SwipeableDrawer
-                anchor={anchor}
-                open={state[anchor]}
-                onClose={toggleDrawer(anchor, false)}
-                onOpen={toggleDrawer(anchor, true)}
-              >
+              anchor={anchor}
+              open={state[anchor]}
+              onClose={toggleDrawer(anchor, false)}
+              onOpen={toggleDrawer(anchor, true)}
+            >
               <Media query="(max-width: 599px)">
                 {(matches) =>
-                  matches ? (
-                      /* Mobile */
+                  matches
+                    ? /* Mobile */
                       mobileList(anchor)
-                  ) : (
-                      /* Desktop */
+                    : /* Desktop */
                       list(anchor)
-                  )
                 }
               </Media>
             </SwipeableDrawer>
-            <img src={snakeirl} width="90em"/>
-            <div className={classes.spacer}/>
+            <img src={snakeirl} width="90em" />
+            <div className={classes.spacer} />
             {auth && (
               <div>
                 <IconButton
@@ -240,5 +282,5 @@ export default function Header(props) {
       </ElevationScroll>
       <Toolbar />
     </div>
-  )
+  );
 }
