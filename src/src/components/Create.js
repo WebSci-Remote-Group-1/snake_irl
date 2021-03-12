@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
   Container,
   Dialog,
   DialogActions,
@@ -25,6 +26,7 @@ import {
 } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 // Import homebrewed files
 import '@assets/style/create.scss';
@@ -130,10 +132,58 @@ class MapEditor extends Component {
     this.state = {
       open: false,
       map: null,
+      addPointOpen: false,
+      addPointName: '',
+      addPointLat: '',
+      addPointLong: '',
+      addPointError: '',
     };
   }
 
   handleClose = () => this.setState({ open: false });
+
+  handleAddPointOpen = () => this.setState({ addPointOpen: true });
+  handleAddPointClose = () => this.setState({ addPointOpen: false });
+
+  handleAddPointSave = () => {
+    switch (true) {
+      case this.state.addPointName == '':
+        this.setState({ addPointError: 'name' });
+        break;
+      case this.state.addPointLat == '':
+        this.setState({ addPointError: 'lat' });
+        break;
+      case this.state.addPointLong == '':
+        this.setState({ addPointError: 'long' });
+        break;
+      default:
+        let oldState = this.state.map;
+        oldState.pointsOfInterest.push({
+          name: this.state.addPointName,
+          lat: this.state.addPointLat,
+          long: this.state.addPointLong,
+        });
+        this.setState({ map: oldState });
+        this.handleAddPointClose();
+        break;
+    }
+  };
+
+  handleAddPointInputChange = (e) => {
+    switch (e.target.id) {
+      case 'name':
+        this.setState({ addPointName: e.target.value });
+        break;
+      case 'lat':
+        this.setState({ addPointLat: e.target.value });
+        break;
+      case 'long':
+        this.setState({ addPointLong: e.target.value });
+        break;
+      default:
+        break;
+    }
+  };
 
   render() {
     return (
@@ -165,7 +215,11 @@ class MapEditor extends Component {
                   />
                 </Grid>
                 <Grid item>
-                  <TableContainer component={Card} raised>
+                  <TableContainer
+                    component={Card}
+                    raised
+                    style={{ minWidth: '35vw', maxWidth: '45vw' }}
+                  >
                     <Table aria-label="Points of Interest Table">
                       <TableHead>
                         <TableRow>
@@ -190,11 +244,76 @@ class MapEditor extends Component {
                           : null}
                       </TableBody>
                     </Table>
+                    <CardActions>
+                      <IconButton
+                        edge="start"
+                        color="primary"
+                        aria-label="Add new point of interest"
+                        onClick={this.handleAddPointOpen}
+                      >
+                        <AddBoxIcon />
+                      </IconButton>
+                    </CardActions>
                   </TableContainer>
                 </Grid>
               </Grid>
             </Box>
           </Box>
+        </Dialog>
+        <Dialog
+          open={this.state.addPointOpen}
+          onClose={this.handleAddPointClose}
+        >
+          <DialogTitle>Add new point</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <Typography>
+                Please enter the details of your new point
+              </Typography>
+            </DialogContentText>
+            <Box my={2}>
+              <TextField
+                autoFocus
+                id="name"
+                label="name"
+                type="text"
+                fullWidth
+                variant="outlined"
+                onChange={this.handleAddPointInputChange}
+                error={this.state.addPointError == 'name'}
+              />
+            </Box>
+            <Box mb={2}>
+              <TextField
+                id="lat"
+                label="lat"
+                type="text"
+                fullWidth
+                variant="outlined"
+                onChange={this.handleAddPointInputChange}
+                error={this.state.addPointError == 'lat'}
+              />
+            </Box>
+            <Box mb={2}>
+              <TextField
+                id="long"
+                label="long"
+                type="text"
+                fullWidth
+                variant="outlined"
+                onChange={this.handleAddPointInputChange}
+                error={this.state.addPointError == 'long'}
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleAddPointSave} color="primary">
+              Save
+            </Button>
+            <Button onClick={this.handleAddPointClose} color="secondary">
+              Cancel
+            </Button>
+          </DialogActions>
         </Dialog>
       </>
     );

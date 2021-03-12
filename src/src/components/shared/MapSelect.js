@@ -21,7 +21,7 @@ import Maps from '@assets/frontend-placeholders/created_maps.json';
 // Invidual card for each map
 // Takes in the map OBJ it is displaying as well as optionally a designated
 // click handler in props
-export const MapCard = (props) => {
+const MapCard = (props) => {
   // Function which runs the defined click handler if provided
   const delegateClick = () =>
     'clickHandler' in props ? props.clickHandler(props.map) : null;
