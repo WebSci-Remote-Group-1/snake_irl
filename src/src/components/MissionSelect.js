@@ -83,7 +83,7 @@ class MapPreview extends Component {
             style={{
               maxWidth: '90%',
               margin: '10px auto',
-              maxHeight: '150px',
+              maxHeight: '40vh',
               overflow: 'scroll',
             }}
           >
@@ -162,4 +162,3 @@ class MissionSelect extends Component {
 }
 
 export default MissionSelect;
-
