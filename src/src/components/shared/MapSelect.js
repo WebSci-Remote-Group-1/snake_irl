@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 // Import material UI components
 import {
+  Box,
   Card,
   CardActions,
   CardActionArea,
@@ -26,21 +27,23 @@ export const MapCard = (props) => {
     'clickHandler' in props ? props.clickHandler(props.map) : null;
 
   return (
-    <Card raised>
-      <CardActionArea id={props.map.title} onClick={delegateClick}>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
-            {props.map.title}
-          </Typography>
-          <Typography>{props.map.description}</Typography>
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-        <IconButton aria-label="delete map">
-          <DeleteIcon />
-        </IconButton>
-      </CardActions>
-    </Card>
+    <Box minWidth={window.innerWidth < 600 ? '90vw' : null}>
+      <Card raised>
+        <CardActionArea id={props.map.title} onClick={delegateClick}>
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              {props.map.title}
+            </Typography>
+            <Typography>{props.map.description}</Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <IconButton aria-label="delete map">
+            <DeleteIcon />
+          </IconButton>
+        </CardActions>
+      </Card>
+    </Box>
   );
 };
 
@@ -57,7 +60,12 @@ class MapSelect extends Component {
 
   render() {
     return (
-      <Grid container justify="center" alignItems="center" spacing={5}>
+      <Grid
+        container
+        justify="center"
+        alignItems="center"
+        spacing={window.innerWidth > 600 ? 5 : 1}
+      >
         {this.state.mapData.map((map) => (
           <Grid item key={map.title}>
             <MapCard map={map} clickHandler={this.props.clickHandler} />
