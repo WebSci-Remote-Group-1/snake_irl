@@ -153,7 +153,28 @@ export default function Header(props) {
       <Typography className={classes.sidebarHeader} variant="h4">
         Leaderboard
       </Typography>
-      <List></List>
+      <List>
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="All Time"
+          to="#"
+        />
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="Monthly"
+          to="#"
+        />
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="Weekly"
+          to="#"
+        />
+        <ListItemLink
+          icon={<FormatListNumberedIcon />}
+          primary="Daily"
+          to="#"
+        />
+      </List>
     </div>
   );
 
