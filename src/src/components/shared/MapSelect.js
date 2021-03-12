@@ -38,9 +38,11 @@ export const MapCard = (props) => {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <IconButton aria-label="delete map">
-            <DeleteIcon />
-          </IconButton>
+          {props.actionItems ? (
+            <IconButton aria-label="delete map">
+              <DeleteIcon />
+            </IconButton>
+          ) : null}
         </CardActions>
       </Card>
     </Box>
@@ -68,7 +70,11 @@ class MapSelect extends Component {
       >
         {this.state.mapData.map((map) => (
           <Grid item key={map.title}>
-            <MapCard map={map} clickHandler={this.props.clickHandler} />
+            <MapCard
+              map={map}
+              clickHandler={this.props.clickHandler}
+              actionItems={'actionItems' in this.props ? true : false}
+            />
           </Grid>
         ))}
       </Grid>
