@@ -1,6 +1,5 @@
 // Import React, tools and helpers
 import React, { useState, Component, createRef, forwardRef } from 'react';
-import Image from 'material-ui-image';
 
 // Import MaterialUI elements
 import {
