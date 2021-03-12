@@ -1,5 +1,5 @@
 import Create from '@components/Create';
-import Index from '@components/TempIndex';
+import Index from '@components/DesktopIndex';
 import MobileIndex from '@components/MobileIndex';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Media from 'react-media'; // add Media
