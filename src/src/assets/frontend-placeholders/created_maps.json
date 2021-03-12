@@ -3,22 +3,33 @@
     {
       "title": "RPI Roundabout",
       "description": "Go around RPI",
-      "points-of-interest": []
+      "pointsOfInterest": [
+        {
+          "name": "Russel-Sage Dining Hall",
+          "lat": 0,
+          "long": 0
+        },
+        {
+          "name": "Sage Lecture Hall",
+          "lat": 0,
+          "long": 0
+        }
+      ]
     },
     {
       "title": "Shirley's Temple",
       "description": "RPI administrative facilities",
-      "points-of-interest": []
+      "pointsOfInterest": []
     },
     {
       "title": "Trojan Horse Race",
       "description": "Locations in downtown Troy. Stay safe!",
-      "points-of-interest": []
+      "pointsOfInterest": []
     },
     {
       "title": "Hudson Parks",
       "description": "Explore nature in the Hudson Valley",
-      "points-of-interest": []
+      "pointsOfInterest": []
     }
   ]
 }
