@@ -3,7 +3,7 @@
  * server and the MongoDB database
  */
 
-const mongodb = require('mongodb');
+const { MongoClient, ObjectID } = require('mongodb');
 require('dotenv').config();
 
 /*
@@ -18,4 +18,19 @@ const constructProperMongoURI = (env_var_name) => {
   return uri;
 };
 
-module.exports = { constructProperMongoURI };
+const fetchMongoConnection = async (mongoURI) => {
+  const mongoClient = new MongoClient(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  let retObj = null;
+  try {
+    await mongoClient.connect();
+    retObj = mongoClient;
+  } finally {
+    return retObj;
+  }
+};
+
+module.exports = { constructProperMongoURI, fetchMongoConnection };

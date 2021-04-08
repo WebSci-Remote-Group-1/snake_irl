@@ -5,6 +5,7 @@
 // Package imports
 const express = require('express');
 const { MongoClient, ObjectID } = require('mongodb');
+const config = require('config');
 require('dotenv').config();
 
 // Homebrew imports
@@ -12,8 +13,8 @@ const MGDB_PlayerInterface = require('./lib/player_lib');
 
 // Globals
 const app = express();
-const port = 3001;
-const api_path = '/api/v1';
+const port = config.get('api.port');
+const api_path = config.get('api.api_path');
 
 app.use(express.json());
 
@@ -24,8 +25,6 @@ app.use(express.json());
  */
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
-
-  MGDB_PlayerInterface.createUser(null, null);
 });
 
 // Example test endpoint
@@ -35,6 +34,6 @@ app.get(api_path + '/hello', (req, res) => {
 
 // Fetch player account information
 app.get(api_path + '/player/:id', (req, res) => {
-  console.log(req.params.id);
+  MGDB_PlayerInterface.fetchUser('west');
   res.json({ status: 200, message: 'You are pinging the players endpoint' });
 });

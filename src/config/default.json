@@ -1,0 +1,9 @@
+{
+  "api": {
+    "port": 3001,
+    "api_path": "/api/v1"
+  },
+  "database": {
+    "player_accounts": "dev_player_accounts"
+  }
+}
