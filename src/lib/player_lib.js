@@ -4,7 +4,6 @@
  */
 
 // Package imports
-require('dotenv').config();
 const config = require('config');
 
 // Homebrew imports
@@ -22,24 +21,36 @@ const createUser = async (userDetails) => {
   console.log(mongoURI);
 };
 
-const fetchUser = async (username) => {
-  let mongoConn = await MGDB_Core.fetchMongoConnection(mongoURI);
+const fetchUser = (usrname) =>
+  new Promise((resolve, reject) => {
+    MGDB_Core.fetchMongoConnection(mongoURI)
+      .then((connection) => {
+        return connection
+          .db('snake_irl')
+          .collection(config.get('database.player_accounts'))
+          .findOne({ username: usrname });
+      })
+      .then((results) => {
+        results == null
+          ? reject(`${usrname} is not a known user of snake_irl`)
+          : resolve(results);
+      });
+  });
 
-  if (mongoConn == null) {
-    console.error('<player_lib.fetchUser> ERROR: No client object returned');
-    return { status: -1, message: 'ERROR: Unable to connect to mongo' };
-  }
+const fetchUsers = () =>
+  new Promise((resolve, reject) => {
+    MGDB_Core.fetchMongoConnection(mongoURI)
+      .then((connection) => {
+        return connection
+          .db('snake_irl')
+          .collection(config.get('database.player_accounts'))
+          .find({});
+      })
+      .then((results) => {
+        results.toArray((err, data) => {
+          err ? reject(err) : resolve(data);
+        });
+      });
+  });
 
-  let playerColl = mongoConn
-    .db('snake_irl')
-    .collection(config.get('database.player_accounts'))
-    .findOne();
-  // .collection(config.get('database.player_accounts'));
-  playerColl
-    .then((val) => {
-      console.log(val);
-    })
-    .then(() => mongoConn.close());
-};
-
-module.exports = { createUser, fetchUser };
+module.exports = { createUser, fetchUser, fetchUsers };

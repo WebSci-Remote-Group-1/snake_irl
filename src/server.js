@@ -33,7 +33,26 @@ app.get(api_path + '/hello', (req, res) => {
 });
 
 // Fetch player account information
-app.get(api_path + '/player/:id', (req, res) => {
-  MGDB_PlayerInterface.fetchUser('west');
-  res.json({ status: 200, message: 'You are pinging the players endpoint' });
+app.get(api_path + '/player/:id', async (req, res) => {
+  let response = null;
+  try {
+    response = await MGDB_PlayerInterface.fetchUser(req.params.id);
+    response.status == 0 ? (response.status = 200) : (response.status = 420);
+  } catch (err) {
+    response = { status: 200, message: err };
+  } finally {
+    res.status(response.status).json(response);
+  }
+});
+
+app.get(api_path + '/players', async (req, res) => {
+  let response = null;
+  try {
+    response = await MGDB_PlayerInterface.fetchUsers();
+    response.status == 0 ? (response.status = 200) : (response.status = 420);
+  } catch (err) {
+    response = { status: 200, message: err };
+  } finally {
+    res.status(response.status).json(response);
+  }
 });
