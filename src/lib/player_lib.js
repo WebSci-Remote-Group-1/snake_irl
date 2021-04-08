@@ -21,14 +21,14 @@ const createUser = async (userDetails) => {
   console.log(mongoURI);
 };
 
-const fetchUser = (usrname) =>
+const fetchUser = (usrname, filter = null) =>
   new Promise((resolve, reject) => {
     MGDB_Core.fetchMongoConnection(mongoURI)
       .then((connection) => {
         return connection
           .db('snake_irl')
           .collection(config.get('database.player_accounts'))
-          .findOne({ username: usrname });
+          .findOne({ username: usrname }, filter);
       })
       .then((results) => {
         results == null
@@ -37,14 +37,14 @@ const fetchUser = (usrname) =>
       });
   });
 
-const fetchUsers = () =>
+const fetchUsers = (filter = null) =>
   new Promise((resolve, reject) => {
     MGDB_Core.fetchMongoConnection(mongoURI)
       .then((connection) => {
         return connection
           .db('snake_irl')
           .collection(config.get('database.player_accounts'))
-          .find({});
+          .find({}, filter);
       })
       .then((results) => {
         results.toArray((err, data) => {
