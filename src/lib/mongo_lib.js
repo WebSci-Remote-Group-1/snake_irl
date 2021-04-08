@@ -3,13 +3,18 @@
  * server and the MongoDB database
  */
 
-const mongodb = require('mongodb');
+const { MongoClient, ObjectID } = require('mongodb');
 require('dotenv').config();
 
 /*
  * =======================================
  * Functions
  * =======================================
+ */
+
+/* Returns the proper mongoURI given the name of the env var which stores the
+ * username and password of the user to authenticate on the database in the
+ * format <username>:<password>
  */
 const constructProperMongoURI = (env_var_name) => {
   let uri =
@@ -18,4 +23,20 @@ const constructProperMongoURI = (env_var_name) => {
   return uri;
 };
 
-module.exports = { constructProperMongoURI };
+// Instantiates and returns a mongoDB connection from a given URI
+const fetchMongoConnection = async (mongoURI) => {
+  const mongoClient = new MongoClient(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  let retObj = null;
+  try {
+    await mongoClient.connect();
+    retObj = mongoClient;
+  } finally {
+    return retObj;
+  }
+};
+
+module.exports = { constructProperMongoURI, fetchMongoConnection };

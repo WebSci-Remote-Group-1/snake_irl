@@ -126,3 +126,7 @@ Dockerfile
 docker-compose-yml
 
 .DS*
+
+# Pipenv
+*Pipfile.lock
+*.lock
