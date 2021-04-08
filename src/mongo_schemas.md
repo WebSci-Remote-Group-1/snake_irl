@@ -16,6 +16,7 @@
   username: (String) unique player username, also functions as the display name
   password_storage: (???) Method for storing user password information safely -- UNKNOWN HOW TO PROPERLY IMPLEMENT ATM
   history: (Array (ObjectID)) Stores the players game history as an array of object ids which link to the "games" collection
+  access_level: (int) Representation of whether or not the user has elevated privileges
   points: (int) Lifetime points of this account
   totalPlaytime: (long/double?) Stores the amount of time a player has spent playing snake_irl (not just website/creator time)
   lastLogin: (DateTime) The timestamp of the user's last login
