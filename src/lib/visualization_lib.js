@@ -18,6 +18,9 @@ const MGDB_PlayerInterface = require('./player_lib');
  * Functions
  * =======================================
  */
+
+// Requests all users from DB with queryFilter applied, converts the result to
+// csv and then returns the data
 const serializeUsers = async (queryFilter = null) => {
   let userData = await MGDB_PlayerInterface.fetchUsers(queryFilter);
 
