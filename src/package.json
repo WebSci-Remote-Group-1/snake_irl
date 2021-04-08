@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/WebSci-Remote-Group-1/snake_irl#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.6"
   }
 }
