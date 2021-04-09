@@ -13,6 +13,6 @@
 - Brooke:
 	- Implemented `react-vis` data visualization for "Player Playtime" and "Player Points" in order to give more context to the "Player Points vs Player Total Game Time" scatter plot
 
-# Important Note
+# Installation Instructions
 
 `yarn` is preferred as `react-vis` has a minor dependency error with the latest version of `react`, `npm` can work but you need to use the `--force` flag. Additionally, two .env files are required, one in /src, and one in /src/helperTools. These can be provided upon request, but are not included in the repository by default.
