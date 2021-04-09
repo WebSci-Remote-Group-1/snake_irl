@@ -32,6 +32,7 @@ import ReactLoading from 'react-loading';
 import Header from './shared/Header.js';
 import API from '../api';
 
+// Generates a bargraph from an API URL with parsed CSV data
 class BarDataCard extends React.Component {
   constructor(props) {
     super(props);
@@ -45,7 +46,7 @@ class BarDataCard extends React.Component {
   }
 
   async componentDidMount() {
-    API.get('/api/v1/data/players?filters=demographics.age').then((data) => {
+    API.get(this.props.dataSrc).then((data) => {
       this.setState({
         raw_csv: data.data.payload,
         data: this.props.parseData(data.data.payload.split('\n')),
@@ -108,6 +109,7 @@ class BarDataCard extends React.Component {
   }
 }
 
+// Generate scatterplot from API CSV file
 class ScatterDataCard extends React.Component {
   constructor(props) {
     super(props);
@@ -123,23 +125,21 @@ class ScatterDataCard extends React.Component {
   }
 
   async componentDidMount() {
-    API.get('/api/v1/data/players?filters=points,totalPlaytime').then(
-      (data) => {
-        this.setState({
-          raw_csv: data.data.payload,
-          data: this.props.parseData(data.data.payload.split('\n')),
-          loading: false,
-        });
-        let maxX = 0,
-          maxY = 0;
-        this.state.data.map((element) => {
-          if (element.x > maxX) maxX = element.x;
-          if (element.y > maxY) maxY = element.y;
-        });
+    API.get(this.props.dataSrc).then((data) => {
+      this.setState({
+        raw_csv: data.data.payload,
+        data: this.props.parseData(data.data.payload.split('\n')),
+        loading: false,
+      });
+      let maxX = 0,
+        maxY = 0;
+      this.state.data.map((element) => {
+        if (element.x > maxX) maxX = element.x;
+        if (element.y > maxY) maxY = element.y;
+      });
 
-        this.setState({ domainBound: maxX, rangeBound: maxY });
-      }
-    );
+      this.setState({ domainBound: maxX, rangeBound: maxY });
+    });
   }
 
   openCSV = () => this.setState({ csv_dialog_open: true });
@@ -202,6 +202,8 @@ class ScatterDataCard extends React.Component {
   }
 }
 
+// Specific functions for parsing individual queries, passed as prop
+
 const parseAgeData = (rawData) => {
   let retObj = [
     { x: '<18', y: 0 },
@@ -235,6 +237,8 @@ const parsePointsAgainstPlaytime = (rawData) => {
   return retObj;
 };
 
+// Admin page comp
+
 export const Admin = () => {
   return (
     <div>
@@ -251,6 +255,7 @@ export const Admin = () => {
             title="Age of Players"
             parseData={parseAgeData}
             xType="ordinal"
+            dataSrc="/api/v1/data/players?filters=demographics.age"
           />
           <ScatterDataCard
             title="Playtime vs Points"
@@ -258,6 +263,7 @@ export const Admin = () => {
             xType="linear"
             xlabel="Hours played"
             ylabel="Total points"
+            dataSrc="/api/v1/data/players?filters=points,totalPlaytime"
           />
         </Grid>
       </Container>
