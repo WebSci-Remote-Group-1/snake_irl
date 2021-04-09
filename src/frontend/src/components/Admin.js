@@ -60,7 +60,7 @@ class BarDataCard extends React.Component {
 
   render() {
     return (
-      <Box mx={3}>
+      <Box m={3}>
         <Card>
           <CardContent>
             <Box textAlign="center">
@@ -147,7 +147,7 @@ class ScatterDataCard extends React.Component {
 
   render() {
     return (
-      <Box mx={3}>
+      <Box m={3}>
         <Card>
           <CardContent>
             <Box textAlign="center">
@@ -229,10 +229,10 @@ const parseAgeData = (rawData) => {
 const parsePointData = (rawData) => {
   let retObj = [
     { x: '<2000', y: 0 },
-    { x: '2000-3999', y: 0},
-    { x: '4000-5999', y: 0},
-    { x: '6000-7999', y: 0},
-    { x: '8000>', y: 0},
+    { x: '2000-3999', y: 0 },
+    { x: '4000-5999', y: 0 },
+    { x: '6000-7999', y: 0 },
+    { x: '8000>', y: 0 },
   ];
 
   rawData.slice(1, -1).map((point) => {
@@ -244,15 +244,15 @@ const parsePointData = (rawData) => {
   });
 
   return retObj;
-}
+};
 
 const parsePlaytime = (rawData) => {
   let retObj = [
-    { x: '<20', y: 0},
-    { x: '20-39', y: 0},
-    { x: '40-59', y: 0},
-    { x: '60-79', y: 0},
-    { x: '80>', y: 0},
+    { x: '<20', y: 0 },
+    { x: '20-39', y: 0 },
+    { x: '40-59', y: 0 },
+    { x: '60-79', y: 0 },
+    { x: '80>', y: 0 },
   ];
 
   rawData.slice(1, -1).map((point) => {
@@ -263,8 +263,8 @@ const parsePlaytime = (rawData) => {
     else if (point >= 80) retObj[4].y += 1;
   });
 
-  return retObj
-}
+  return retObj;
+};
 
 const parsePointsAgainstPlaytime = (rawData) => {
   let retObj = [];
