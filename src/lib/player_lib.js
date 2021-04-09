@@ -37,17 +37,17 @@ const fetchUser = (usrname, filter = null) =>
       })
       .then((results) => {
         // Parse and handle results of db lookup
-        mongoConn.close();
         results == null
           ? reject(`${usrname} is not a known user of snake_irl`)
           : resolve(results);
+        // mongoConn.close();
       });
   });
 
 // Fetch all users in the database
-const fetchUsers = (filter = null) =>
-  new Promise((resolve, reject) => {
-    let mongoConn = MGDB_Core.fetchMongoConnection(mongoURI);
+const fetchUsers = (filter = null) => {
+  let mongoConn = MGDB_Core.fetchMongoConnection(mongoURI);
+  return new Promise((resolve, reject) => {
     mongoConn
       .then((connection) => {
         // Fetch data from DB
@@ -59,10 +59,10 @@ const fetchUsers = (filter = null) =>
       .then((results) => {
         // Parse and handle results of db lookup
         results.toArray((err, data) => {
-          mongoConn.close();
           err ? reject(err) : resolve(data);
         });
       });
   });
+};
 
 module.exports = { createUser, fetchUser, fetchUsers };
