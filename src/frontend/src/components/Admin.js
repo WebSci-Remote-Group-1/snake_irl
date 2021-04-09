@@ -60,7 +60,7 @@ class BarDataCard extends React.Component {
 
   render() {
     return (
-      <Box mx={3}>
+      <Box m={3}>
         <Card>
           <CardContent>
             <Box textAlign="center">
@@ -147,7 +147,7 @@ class ScatterDataCard extends React.Component {
 
   render() {
     return (
-      <Box mx={3}>
+      <Box m={3}>
         <Card>
           <CardContent>
             <Box textAlign="center">
@@ -226,6 +226,46 @@ const parseAgeData = (rawData) => {
   return retObj;
 };
 
+const parsePointData = (rawData) => {
+  let retObj = [
+    { x: '<2000', y: 0 },
+    { x: '2000-3999', y: 0 },
+    { x: '4000-5999', y: 0 },
+    { x: '6000-7999', y: 0 },
+    { x: '8000>', y: 0 },
+  ];
+
+  rawData.slice(1, -1).map((point) => {
+    if (point < 2000) retObj[0].y += 1;
+    else if (point >= 2000 && point < 4000) retObj[1].y += 1;
+    else if (point >= 4000 && point < 6000) retObj[2].y += 1;
+    else if (point >= 6000 && point < 8000) retObj[3].y += 1;
+    else if (point >= 8000) retObj[4].y += 1;
+  });
+
+  return retObj;
+};
+
+const parsePlaytime = (rawData) => {
+  let retObj = [
+    { x: '<20', y: 0 },
+    { x: '20-39', y: 0 },
+    { x: '40-59', y: 0 },
+    { x: '60-79', y: 0 },
+    { x: '80>', y: 0 },
+  ];
+
+  rawData.slice(1, -1).map((point) => {
+    if (point < 20) retObj[0].y += 1;
+    else if (point >= 20 && point < 40) retObj[1].y += 1;
+    else if (point >= 40 && point < 60) retObj[2].y += 1;
+    else if (point >= 60 && point < 80) retObj[3].y += 1;
+    else if (point >= 80) retObj[4].y += 1;
+  });
+
+  return retObj;
+};
+
 const parsePointsAgainstPlaytime = (rawData) => {
   let retObj = [];
 
@@ -264,6 +304,18 @@ export const Admin = () => {
             xlabel="Hours played"
             ylabel="Total points"
             dataSrc="/api/v1/data/players?filters=points,totalPlaytime"
+          />
+          <BarDataCard
+            title="Player Points"
+            parseData={parsePointData}
+            xType="ordinal"
+            dataSrc="/api/v1/data/players?filters=points"
+          />
+          <BarDataCard
+            title="Playtimes"
+            parseData={parsePlaytime}
+            xType="ordinal"
+            dataSrc="/api/v1/data/players?filters=totalPlaytime"
           />
         </Grid>
       </Container>
