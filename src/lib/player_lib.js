@@ -37,7 +37,6 @@ const fetchUser = (usrname, filter = null) =>
       })
       .then((results) => {
         // Parse and handle results of db lookup
-        mongoConn.close();
         results == null
           ? reject(`${usrname} is not a known user of snake_irl`)
           : resolve(results);
@@ -59,7 +58,6 @@ const fetchUsers = (filter = null) =>
       .then((results) => {
         // Parse and handle results of db lookup
         results.toArray((err, data) => {
-          mongoConn.close();
           err ? reject(err) : resolve(data);
         });
       });
