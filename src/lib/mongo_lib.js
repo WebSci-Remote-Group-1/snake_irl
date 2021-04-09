@@ -30,13 +30,7 @@ const fetchMongoConnection = async (mongoURI) => {
     useUnifiedTopology: true,
   });
 
-  let retObj = null;
-  try {
-    await mongoClient.connect();
-    retObj = mongoClient;
-  } finally {
-    return retObj;
-  }
+  return mongoClient.connect();
 };
 
 module.exports = { constructProperMongoURI, fetchMongoConnection };
