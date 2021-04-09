@@ -73,7 +73,10 @@ app.get(api_path + '/data/:datatype', async (req, res) => {
       req.query.showID && req.query.showID == 1 // If showID is 1 then include in the projection
         ? (mongoOptions.projection._id = 1)
         : null;
-      res.send(await VisualizationUtil.serializeUsers(mongoOptions));
+      res.json({
+        status: 200,
+        payload: await VisualizationUtil.serializeUsers(mongoOptions),
+      });
       break;
     }
 

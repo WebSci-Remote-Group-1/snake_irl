@@ -26,7 +26,8 @@ const createUser = async (userDetails) => {
 // Fetch user with username == usrname from db, optionally query can be filtered
 const fetchUser = (usrname, filter = null) =>
   new Promise((resolve, reject) => {
-    MGDB_Core.fetchMongoConnection(mongoURI)
+    let mongoConn = MGDB_Core.fetchMongoConnection(mongoURI);
+    mongoConn
       .then((connection) => {
         // Fetch data from DB
         return connection
@@ -36,6 +37,7 @@ const fetchUser = (usrname, filter = null) =>
       })
       .then((results) => {
         // Parse and handle results of db lookup
+        mongoConn.close();
         results == null
           ? reject(`${usrname} is not a known user of snake_irl`)
           : resolve(results);
@@ -45,7 +47,8 @@ const fetchUser = (usrname, filter = null) =>
 // Fetch all users in the database
 const fetchUsers = (filter = null) =>
   new Promise((resolve, reject) => {
-    MGDB_Core.fetchMongoConnection(mongoURI)
+    let mongoConn = MGDB_Core.fetchMongoConnection(mongoURI);
+    mongoConn
       .then((connection) => {
         // Fetch data from DB
         return connection
@@ -56,6 +59,7 @@ const fetchUsers = (filter = null) =>
       .then((results) => {
         // Parse and handle results of db lookup
         results.toArray((err, data) => {
+          mongoConn.close();
           err ? reject(err) : resolve(data);
         });
       });

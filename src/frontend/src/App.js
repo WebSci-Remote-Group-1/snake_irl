@@ -1,5 +1,6 @@
 import Create from '@components/Create';
 import Index from '@components/DesktopIndex';
+import { Admin } from '@components/Admin';
 import MobileIndex from '@components/MobileIndex';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Media from 'react-media'; // add Media
@@ -33,6 +34,7 @@ function App() {
                     {/* Desktop Routing */}
                     <Route exact path="/" component={Index} />
                     <Route path="/create" component={Create} />
+                    <Route path="/admin" component={Admin} />
                   </Switch>
                 )
               }

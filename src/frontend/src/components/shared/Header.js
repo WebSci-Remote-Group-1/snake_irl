@@ -18,6 +18,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import CreateIcon from '@material-ui/icons/Create';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ShuffleIcon from '@material-ui/icons/Shuffle';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import HomeIcon from '@material-ui/icons/Home';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import MailIcon from '@material-ui/icons/Mail';
@@ -173,6 +174,17 @@ export default function Header(props) {
           icon={<FormatListNumberedIcon />}
           primary="Daily"
           to="#"
+        />
+      </List>
+
+      <Typography className={classes.sidebarHeader} variant="h4">
+        Admin
+      </Typography>
+      <List>
+        <ListItemLink
+          icon={<SupervisorAccountIcon />}
+          primary="Admin"
+          to="/admin"
         />
       </List>
     </div>
