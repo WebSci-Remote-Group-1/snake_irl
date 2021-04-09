@@ -26,10 +26,10 @@ const createUser = async (userDetails) => {
 // Fetch user with username == usrname from db, optionally query can be filtered
 const fetchUser = (usrname, filter = null) =>
   new Promise((resolve, reject) => {
-    let mongoConn = MGDB_Core.fetchMongoConnection(mongoURI);
-    mongoConn
+    MGDB_Core.fetchMongoConnection(mongoURI)
       .then((connection) => {
         // Fetch data from DB
+        mongoClient = connection;
         return connection
           .db('snake_irl')
           .collection(config.get('database.player_accounts'))
@@ -37,6 +37,7 @@ const fetchUser = (usrname, filter = null) =>
       })
       .then((results) => {
         // Parse and handle results of db lookup
+        mongoClient.close();
         results == null
           ? reject(`${usrname} is not a known user of snake_irl`)
           : resolve(results);
@@ -44,12 +45,12 @@ const fetchUser = (usrname, filter = null) =>
   });
 
 // Fetch all users in the database
-const fetchUsers = (filter = null) =>
-  new Promise((resolve, reject) => {
-    let mongoConn = MGDB_Core.fetchMongoConnection(mongoURI);
-    mongoConn
+const fetchUsers = (filter = null) => {
+  return new Promise((resolve, reject) => {
+    MGDB_Core.fetchMongoConnection(mongoURI)
       .then((connection) => {
         // Fetch data from DB
+        mongoClient = connection;
         return connection
           .db('snake_irl')
           .collection(config.get('database.player_accounts'))
@@ -58,9 +59,11 @@ const fetchUsers = (filter = null) =>
       .then((results) => {
         // Parse and handle results of db lookup
         results.toArray((err, data) => {
+          mongoClient.close();
           err ? reject(err) : resolve(data);
         });
       });
   });
+};
 
 module.exports = { createUser, fetchUser, fetchUsers };
