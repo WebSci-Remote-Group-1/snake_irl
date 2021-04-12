@@ -1,5 +1,11 @@
 // Import React, tools and helpers
 import React, { useState, Component, createRef, forwardRef } from 'react';
+import Leaflet, { Icon } from 'leaflet';
+
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+
+delete Leaflet.Icon.Default.prototype._getIconUrl;
 
 // Import MaterialUI elements
 import {
@@ -125,6 +131,24 @@ const StartCreateNewMap = forwardRef((props, ref) => {
     </>
   );
 });
+
+class MapViewCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+	  mapID = props.mapID,
+      mapObj: null,
+    };
+  };
+
+	render() {
+		return (
+			<>
+			<h1>Hi there</h1>
+			</>
+		)
+	}
+}
 
 class MapEditor extends Component {
   constructor(props) {
@@ -339,32 +363,40 @@ class Create extends Component {
     this.mapEditor.current.setState({ open: true, map: clickedMap });
   }
 
-  render() {
-    return (
-      <>
-        <Header />
-        <Container>
-          <Box my={2}>
-            <Grid container justify="space-between">
-              <Typography variant="h4">
-                Create a new map or edit one of your existing maps
-              </Typography>
-              <StartCreateNewMap
-                mapSelectRef={this.mapSelect}
-                ref={this.mapSelect}
-              />
-            </Grid>
-          </Box>
-          <MapSelect
-            ref={this.mapSelect}
-            clickHandler={this.cardClickHandler}
-            actionItems
-          />
-        </Container>
-        <MapEditor ref={this.mapEditor} />
-      </>
-    );
-  }
+  // render() {
+  //   return (
+  //     <>
+  //       <Header />
+  //       <Container>
+  //         <Box my={2}>
+  //           <Grid container justify="space-between">
+  //             <Typography variant="h4">
+  //               Create a new map or edit one of your existing maps
+  //             </Typography>
+  //             <StartCreateNewMap
+  //               mapSelectRef={this.mapSelect}
+  //               ref={this.mapSelect}
+  //             />
+  //           </Grid>
+  //         </Box>
+  //         <MapSelect
+  //           ref={this.mapSelect}
+  //           clickHandler={this.cardClickHandler}
+  //           actionItems
+  //         />
+  //       </Container>
+  //       <MapEditor ref={this.mapEditor} />
+  //     </>
+  //   );
+  // }
+
+	render() {
+		return (
+			<>
+				<MapViewCard mapID="this is my id" />
+			</>
+		);
+	}
 }
 
 export default Create;
