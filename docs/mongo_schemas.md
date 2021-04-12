@@ -2,6 +2,7 @@
 
 ## MongoDB Users
 - `playerManager`: [`player_accounts`] --> Responsible for managing player account information
+- `mapManager`: [`maps`] --> Responsible for managing map information
 
 ## Collections
 - 🚧 `player_accounts`: This collection is responsible for storing player account information
