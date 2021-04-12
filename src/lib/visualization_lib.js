@@ -21,14 +21,24 @@ const MGDB_PlayerInterface = require('./player_lib');
 
 // Requests all users from DB with queryFilter applied, converts the result to
 // csv and then returns the data
-const serializeUsers = async (queryFilter = null) => {
-  let userData = await MGDB_PlayerInterface.fetchUsers(queryFilter);
+const serializeUsers = (queryFilter = null) =>
+  new Promise((resolve, reject) => {
+    const transforms = [flatten()];
 
-  const transforms = [flatten()];
+    const json2csv = new Parser({ transforms });
 
-  const json2csv = new Parser({ transforms });
-  const csv_data = json2csv.parse(userData);
-  return csv_data;
-};
+    let returnData = null;
+
+    MGDB_PlayerInterface.fetchUsers(queryFilter)
+      .then((resp) => {
+        returnData = json2csv.parse(resp);
+      })
+      .catch((err) => {
+        reject(err);
+      })
+      .finally(() => {
+        resolve(returnData);
+      });
+  });
 
 module.exports = { serializeUsers };

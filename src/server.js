@@ -36,16 +36,18 @@ app.get(api_path + '/hello', (req, res) => {
 });
 
 // Fetch player account information
-app.get(api_path + '/player/:username', async (req, res) => {
+app.get(api_path + '/player/:username', (req, res) => {
   let response = null;
-  try {
-    response = await MGDB_PlayerInterface.fetchUser(req.params.username);
-    response.status == 0 ? (response.status = 200) : (response.status = 500);
-  } catch (err) {
-    response = { status: 200, message: err };
-  } finally {
-    res.status(response.status).json(response);
-  }
+  let status = 200;
+  MGDB_PlayerInterface.fetchUser(req.params.username)
+    .then((resp) => {
+      response = resp;
+      response == null ? (status = 500) : null;
+    })
+    .catch((err) => {
+      response = { error: err };
+    })
+    .finally(() => res.status(status).json(response));
 });
 
 /*
@@ -60,7 +62,7 @@ app.get(api_path + '/player/:username', async (req, res) => {
  *  - filter -> comma seperated strings where each string is a field in the mongo document being queried to display
  *  - showID -> boolean which includes the _id field in the return value when provided
  */
-app.get(api_path + '/data/:datatype', async (req, res) => {
+app.get(api_path + '/data/:datatype', (req, res) => {
   switch (req.params.datatype) {
     case 'players': {
       let mongoOptions = { projection: { _id: 0 } }; // Projection for mongo's find
@@ -73,10 +75,11 @@ app.get(api_path + '/data/:datatype', async (req, res) => {
       req.query.showID && req.query.showID == 1 // If showID is 1 then include in the projection
         ? (mongoOptions.projection._id = 1)
         : null;
-      res.json({
-        status: 200,
-        payload: await VisualizationUtil.serializeUsers(mongoOptions),
+
+      VisualizationUtil.serializeUsers(mongoOptions).then((result) => {
+        res.status(200).json({ payload: result });
       });
+
       break;
     }
 

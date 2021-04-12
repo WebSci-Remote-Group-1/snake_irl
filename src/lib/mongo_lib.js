@@ -33,4 +33,49 @@ const fetchMongoConnection = async (mongoURI) => {
   return mongoClient.connect();
 };
 
-module.exports = { constructProperMongoURI, fetchMongoConnection };
+const findOne = (mongoURI, collectionName, query, filter) =>
+  new Promise((resolve, reject) => {
+    fetchMongoConnection(mongoURI)
+      .then((connection) => {
+        // Fetch data from DB
+        mongoClient = connection;
+        return connection
+          .db('snake_irl')
+          .collection(collectionName)
+          .findOne(query, filter);
+      })
+      .then((results) => {
+        // Parse and handle results of db lookup
+        mongoClient.close();
+        results == null
+          ? reject(`No results for provided query ${JSON.stringify(query)}`)
+          : resolve(results);
+      });
+  });
+
+const find = (mongoURI, collectionName, query, filter) =>
+  new Promise((resolve, reject) => {
+    fetchMongoConnection(mongoURI)
+      .then((connection) => {
+        // Fetch data from DB
+        mongoClient = connection;
+        return connection
+          .db('snake_irl')
+          .collection(collectionName)
+          .find(query, filter);
+      })
+      .then((results) => {
+        // Parse and handle results of db lookup
+        results.toArray((err, data) => {
+          mongoClient.close();
+          err ? reject(err) : resolve(data);
+        });
+      });
+  });
+
+module.exports = {
+  constructProperMongoURI,
+  fetchMongoConnection,
+  findOne,
+  find,
+};
