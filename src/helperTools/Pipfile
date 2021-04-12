@@ -5,8 +5,8 @@ name = "pypi"
 
 [packages]
 requests = "*"
-pymongo = "*"
 dnspython = "*"
+pymongo = "*"
 
 [dev-packages]
 neovim = "*"
