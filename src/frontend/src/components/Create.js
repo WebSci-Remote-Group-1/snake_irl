@@ -5,8 +5,6 @@ import Leaflet, { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
-delete Leaflet.Icon.Default.prototype._getIconUrl;
-
 // Import MaterialUI elements
 import {
   Box,
@@ -38,6 +36,8 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import '@assets/style/create.scss';
 import Header from '@components/shared/Header';
 import MapSelect from '@components/shared/MapSelect';
+
+delete Leaflet.Icon.Default.prototype._getIconUrl;
 
 const StartCreateNewMap = forwardRef((props, ref) => {
   const [open, setOpen] = useState(false);
@@ -136,18 +136,18 @@ class MapViewCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-	  mapID = props.mapID,
+      mapID: props.mapID,
       mapObj: null,
     };
-  };
+  }
 
-	render() {
-		return (
-			<>
-			<h1>Hi there</h1>
-			</>
-		)
-	}
+  render() {
+    return (
+      <>
+        <h1>{this.state.mapID}</h1>
+      </>
+    );
+  }
 }
 
 class MapEditor extends Component {
@@ -390,13 +390,13 @@ class Create extends Component {
   //   );
   // }
 
-	render() {
-		return (
-			<>
-				<MapViewCard mapID="this is my id" />
-			</>
-		);
-	}
+  render() {
+    return (
+      <>
+        <MapViewCard mapID="this is my id" />
+      </>
+    );
+  }
 }
 
 export default Create;
