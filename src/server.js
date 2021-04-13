@@ -5,6 +5,7 @@
 // Package imports
 const express = require('express');
 const config = require('config');
+const { ObjectID } = require('mongodb');
 require('dotenv').config();
 
 // Homebrew imports
@@ -55,8 +56,10 @@ app.get(api_path + '/maps/:id?', (req, res) => {
   let response = null;
   let status = 200;
 
-  if (req.params.id == null)
-    MGDB_MapInterface.fetchMaps()
+  if (req.params.id == null) {
+    query = {};
+    if (req.query.author) query.mapOwner = new ObjectID(req.query.author);
+    MGDB_MapInterface.fetchMaps(query)
       .then((resp) => {
         response = resp;
         response == null ? (status = 500) : null;
@@ -66,8 +69,8 @@ app.get(api_path + '/maps/:id?', (req, res) => {
         response = { error: err };
       })
       .finally(() => res.status(status).json(response));
-  else
-    MGDB_MapInterface.fetchMap(req.params.id)
+  } else
+    MGDB_MapInterface.fetchMap(new ObjectID(req.params.id))
       .then((resp) => {
         response = resp;
         response == null ? (status = 500) : null;
