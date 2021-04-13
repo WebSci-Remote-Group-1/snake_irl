@@ -14,7 +14,8 @@ const VisualizationUtil = require('./lib/visualization_lib');
 
 // Globals
 const app = express();
-const port = config.get('api.port');
+const port =
+  process.env.PORT == null ? config.get('api.port') : process.env.PORT;
 const api_path = config.get('api.api_path');
 
 app.use(express.json());
