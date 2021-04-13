@@ -1,6 +1,5 @@
 {
   "scripts": {
-    "heroku-prebuild": "cd src && yarn install",
     "start": "cd src && npm start"
   },
   "engines": {
