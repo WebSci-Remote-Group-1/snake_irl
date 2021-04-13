@@ -4,6 +4,7 @@
 
 // Package imports
 const express = require('express');
+const path = require('path');
 const { MongoClient, ObjectID } = require('mongodb');
 const config = require('config');
 require('dotenv').config();
@@ -93,3 +94,11 @@ app.get(api_path + '/data/:datatype', (req, res) => {
     }
   }
 });
+
+if (process.env.NODE_ENV == 'production') {
+  const siteRoot = path.join(__dirname, 'frontend', 'build');
+  app.use(express.static(siteRoot));
+  app.get('*', (req, res) => {
+    res.sendFile('index.html', { root: siteRoot });
+  });
+}

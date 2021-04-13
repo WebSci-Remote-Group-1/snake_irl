@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "build": "cd frontend && yarn install && npm run build",
+    "heroku-postbuild": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
