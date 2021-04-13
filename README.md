@@ -9,7 +9,7 @@ Here is a list of necesary `.env` files to run the game server:
   - `MGDB_PLAYERMANAGER` &rarr; a username-password pair for a mongo user in the form `<mongo username>:<mongo password>`
   - `MGDB_MAPMANAGER` &rarr; a username-password pair for a mongo user in the form `<mongo username>:<mongo password>`
 
-While not necesary for running the actual server, there is another `.env` file in the project for some convienience in the `/src/helperTools/.env`
+While not necesary for running the actual server, there is another `.env` file in the project for some convenience in the `/src/helperTools/.env`
 - `MGDB_PLAYER_URI` &rarr; a full mongo uri in the form `<mongo protocol header>://<mongo username>:<mongo password>@<mongo server URI>`
 - `MGDB_MAP_URI` &rarr; a full mongo uri in the form `<mongo protocol header>://<mongo username>:<mongo password>@<mongo server URI>`
 
