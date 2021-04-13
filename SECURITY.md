@@ -10,7 +10,7 @@
 
 For security vulnerabilities discovered while using snake_irl, please report this with an issue in the GitHub issues tab. 
 This issue should follow the format:
-- Title: [Security] <Name of issue>
+- Title: \[Security\] \<Name of issue\>
 - Body: Description of vulnerability, steps to recreate the issue, name of snake_irl account, 
 - Tags: Security
 
