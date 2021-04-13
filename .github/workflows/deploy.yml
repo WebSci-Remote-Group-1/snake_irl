@@ -18,5 +18,5 @@ jobs:
             - name: Push to dokku
               uses: dokku/github-action@master
               with:
-                  git_remote_url: 'ssh://dokku@[2603:7081:4e45:deab:d250:99ff:fe7b:a948]/snake-irl'
+                  git_remote_url: 'ssh://dokku@[2603:7081:4e45:deab:d250:99ff:fe7b:a948]:22/snake-irl'
                   ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
