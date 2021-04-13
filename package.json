@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "heroku-prebuild": "cd src && yarn install",
+    "start": "cd src && npm start",
+    "heroku-postbuild": "cd src && npm run build"
+  },
+  "engines": {
+    "node": ">=15",
+    "yarn": ">=1.22"
+  }
+}
