@@ -24,6 +24,8 @@ import '@assets/style/create.scss';
 import Header from '@components/shared/Header';
 import MapSelect from '@components/shared/MapSelect';
 
+import MapDisplay from '@components/shared/MapDisplay';
+
 // Import frontend demo placeholder files
 import Maps from '@assets/frontend-placeholders/created_maps.json';
 
@@ -60,12 +62,7 @@ class MapPreview extends Component {
             </Box>
           ) : null}
         </Grid>
-        <img
-          src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.androidbeat.com%2Fwp-content%2Fuploads%2F2014%2F11%2Fgoogle_maps_api.png&f=1&nofb=1"
-          id="map_ph"
-          alt="map placeholder"
-          style={{ maxWidth: '90%', margin: '0 auto' }}
-        />
+        {this.props.open ? <MapDisplay mapID={this.props.map._id} /> : null}{' '}
         {/* Placeholder */}
         {this.props.map ? (
           <TableContainer
