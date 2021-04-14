@@ -3,7 +3,15 @@ import React, { useState, Component, createRef, forwardRef } from 'react';
 import Leaflet, { Icon } from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  MapConsumer,
+  latlng,
+} from 'react-leaflet';
 import { RollBoxLoading } from 'react-loadingg';
 
 // Import MaterialUI elements
@@ -148,6 +156,7 @@ class MapViewCard extends Component {
       mapID: props.mapID,
       mapObj: null,
       loading: true,
+      mapCenter: [42.72983440371727, -73.68997137045602],
     };
   }
 
@@ -164,8 +173,6 @@ class MapViewCard extends Component {
     mapCenter[1] /= this.state.mapObj.pointsOfInterest.length;
 
     this.setState({ mapCenter: mapCenter });
-
-    console.log(this.state);
   }
 
   render() {
@@ -175,14 +182,20 @@ class MapViewCard extends Component {
           {this.state.loading ? (
             <RollBoxLoading speed={250} color="#acacac" />
           ) : (
-            <MapContainer
-              center={[42.72983440371727, -73.68997137045602]}
-              zoom={16}
-            >
+            <MapContainer center={this.state.mapCenter} zoom={16}>
               <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
               />
+              <MapConsumer>
+                {(map) => {
+                  map.flyTo({
+                    lat: this.state.mapCenter[0],
+                    lng: this.state.mapCenter[1],
+                  });
+                  return null;
+                }}
+              </MapConsumer>
               {this.state.mapObj.pointsOfInterest.map((poi) => {
                 return (
                   <Marker
@@ -291,10 +304,9 @@ class MapEditor extends Component {
             <Box mt={10}>
               <Grid container justify="space-evenly">
                 <Grid item>
-                  <img
-                    src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.androidbeat.com%2Fwp-content%2Fuploads%2F2014%2F11%2Fgoogle_maps_api.png&f=1&nofb=1"
-                    id="map_ph"
-                  />
+                  {this.state.map ? (
+                    <MapViewCard mapID={this.state.map._id} />
+                  ) : null}
                 </Grid>
                 <Grid item>
                   <TableContainer
@@ -421,40 +433,40 @@ class Create extends Component {
     this.mapEditor.current.setState({ open: true, map: clickedMap });
   }
 
-  // render() {
-  //   return (
-  //     <>
-  //       <Header />
-  //       <Container>
-  //         <Box my={2}>
-  //           <Grid container justify="space-between">
-  //             <Typography variant="h4">
-  //               Create a new map or edit one of your existing maps
-  //             </Typography>
-  //             <StartCreateNewMap
-  //               mapSelectRef={this.mapSelect}
-  //               ref={this.mapSelect}
-  //             />
-  //           </Grid>
-  //         </Box>
-  //         <MapSelect
-  //           ref={this.mapSelect}
-  //           clickHandler={this.cardClickHandler}
-  //           actionItems
-  //         />
-  //       </Container>
-  //       <MapEditor ref={this.mapEditor} />
-  //     </>
-  //   );
-  // }
-
   render() {
     return (
       <>
-        <MapViewCard mapID="6074d236155b07b430f47acf" />
+        <Header />
+        <Container>
+          <Box my={2}>
+            <Grid container justify="space-between">
+              <Typography variant="h4">
+                Create a new map or edit one of your existing maps
+              </Typography>
+              <StartCreateNewMap
+                mapSelectRef={this.mapSelect}
+                ref={this.mapSelect}
+              />
+            </Grid>
+          </Box>
+          <MapSelect
+            ref={this.mapSelect}
+            clickHandler={this.cardClickHandler}
+            actionItems
+          />
+        </Container>
+        <MapEditor ref={this.mapEditor} />
       </>
     );
   }
+
+  // render() {
+  //   return (
+  //     <>
+  //       <MapViewCard mapID="6074d236155b07b430f47acf" />
+  //     </>
+  //   );
+  // }
 }
 
 export default Create;
