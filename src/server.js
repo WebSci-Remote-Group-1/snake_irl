@@ -4,6 +4,7 @@
 
 // Package imports
 const express = require('express');
+const path = require('path');
 const config = require('config');
 const { ObjectID } = require('mongodb');
 require('dotenv').config();
@@ -15,7 +16,8 @@ const VisualizationUtil = require('./lib/visualization_lib');
 
 // Globals
 const app = express();
-const port = config.get('api.port');
+const port =
+  process.env.PORT == null ? config.get('api.port') : process.env.PORT;
 const api_path = config.get('api.api_path');
 
 app.use(express.json());
@@ -124,3 +126,11 @@ app.get(api_path + '/data/:datatype', (req, res) => {
     }
   }
 });
+
+if (process.env.NODE_ENV == 'production') {
+  const siteRoot = path.join(__dirname, 'frontend', 'build');
+  app.use(express.static(siteRoot));
+  app.get('*', (req, res) => {
+    res.sendFile('index.html', { root: siteRoot });
+  });
+}
