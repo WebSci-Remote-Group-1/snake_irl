@@ -16,9 +16,6 @@ import {
 // Import material UI icons
 import DeleteIcon from '@material-ui/icons/Delete';
 
-// Import frontend demo placeholder files
-import Maps from '@assets/frontend-placeholders/created_maps.json';
-
 import API from '@root/src/api';
 
 // Invidual card for each map
@@ -66,7 +63,7 @@ class MapSelect extends Component {
 
   async componentDidMount() {
     let mapData = await API.get('/api/v1/maps');
-    if (mapData.status == 200) {
+    if (mapData.status === 200) {
       this.setState({
         mapData: mapData.data,
         loading: false,

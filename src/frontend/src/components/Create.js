@@ -8,9 +8,7 @@ import {
   TileLayer,
   Marker,
   Popup,
-  useMap,
   MapConsumer,
-  latlng,
 } from 'react-leaflet';
 import { RollBoxLoading } from 'react-loadingg';
 
@@ -168,6 +166,8 @@ class MapViewCard extends Component {
     this.state.mapObj.pointsOfInterest.map((point) => {
       mapCenter[0] += point.lat;
       mapCenter[1] += point.long;
+
+      return null;
     });
     mapCenter[0] /= this.state.mapObj.pointsOfInterest.length;
     mapCenter[1] /= this.state.mapObj.pointsOfInterest.length;
@@ -242,13 +242,13 @@ class MapEditor extends Component {
 
   handleAddPointSave = () => {
     switch (true) {
-      case this.state.addPointName == '':
+      case this.state.addPointName === '':
         this.setState({ addPointError: 'name' });
         break;
-      case this.state.addPointLat == '':
+      case this.state.addPointLat === '':
         this.setState({ addPointError: 'lat' });
         break;
-      case this.state.addPointLong == '':
+      case this.state.addPointLong === '':
         this.setState({ addPointError: 'long' });
         break;
       default:
@@ -374,7 +374,7 @@ class MapEditor extends Component {
                 fullWidth
                 variant="outlined"
                 onChange={this.handleAddPointInputChange}
-                error={this.state.addPointError == 'name'}
+                error={this.state.addPointError === 'name'}
               />
             </Box>
             <Box mb={2}>
@@ -385,7 +385,7 @@ class MapEditor extends Component {
                 fullWidth
                 variant="outlined"
                 onChange={this.handleAddPointInputChange}
-                error={this.state.addPointError == 'lat'}
+                error={this.state.addPointError === 'lat'}
               />
             </Box>
             <Box mb={2}>
@@ -396,7 +396,7 @@ class MapEditor extends Component {
                 fullWidth
                 variant="outlined"
                 onChange={this.handleAddPointInputChange}
-                error={this.state.addPointError == 'long'}
+                error={this.state.addPointError === 'long'}
               />
             </Box>
           </DialogContent>

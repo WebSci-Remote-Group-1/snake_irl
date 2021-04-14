@@ -1,17 +1,12 @@
 // Import React, tools and helpers
-import React, { useState, Component, createRef, forwardRef } from 'react';
+import React, { Component } from 'react';
 
 // Import MaterialUI elements
 import {
   Box,
   Button,
   Card,
-  Container,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
   IconButton,
   Table,
@@ -20,7 +15,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -34,10 +28,6 @@ import MapSelect from '@components/shared/MapSelect';
 import Maps from '@assets/frontend-placeholders/created_maps.json';
 
 class MapPreview extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <Dialog
@@ -73,6 +63,7 @@ class MapPreview extends Component {
         <img
           src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.androidbeat.com%2Fwp-content%2Fuploads%2F2014%2F11%2Fgoogle_maps_api.png&f=1&nofb=1"
           id="map_ph"
+          alt="map placeholder"
           style={{ maxWidth: '90%', margin: '0 auto' }}
         />
         {/* Placeholder */}
@@ -147,6 +138,7 @@ class MissionSelect extends Component {
         <img
           src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.androidbeat.com%2Fwp-content%2Fuploads%2F2014%2F11%2Fgoogle_maps_api.png&f=1&nofb=1"
           id="map_ph"
+          alt="map placeholder"
           style={{ maxWidth: '100%', margin: '0 auto' }}
         />
         {/* Placeholder */}

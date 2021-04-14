@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
-  CardMedia,
   Container,
   Dialog,
   DialogTitle,
   DialogContent,
-  MuiDialogActions,
-  MuiDialogContent,
-  MuiDialogTitle,
   Grid,
   Typography,
 } from '@material-ui/core';
@@ -136,6 +131,7 @@ class ScatterDataCard extends React.Component {
       this.state.data.map((element) => {
         if (element.x > maxX) maxX = element.x;
         if (element.y > maxY) maxY = element.y;
+        return null;
       });
 
       this.setState({ domainBound: maxX, rangeBound: maxY });
@@ -221,6 +217,8 @@ const parseAgeData = (rawData) => {
     else if (point >= 36 && point < 46) retObj[3].y += 1;
     else if (point >= 46 && point < 55) retObj[4].y += 1;
     else if (point >= 55) retObj[5].y += 1;
+
+    return null;
   });
 
   return retObj;
@@ -241,6 +239,8 @@ const parsePointData = (rawData) => {
     else if (point >= 4000 && point < 6000) retObj[2].y += 1;
     else if (point >= 6000 && point < 8000) retObj[3].y += 1;
     else if (point >= 8000) retObj[4].y += 1;
+
+    return null;
   });
 
   return retObj;
@@ -261,6 +261,8 @@ const parsePlaytime = (rawData) => {
     else if (point >= 40 && point < 60) retObj[2].y += 1;
     else if (point >= 60 && point < 80) retObj[3].y += 1;
     else if (point >= 80) retObj[4].y += 1;
+
+    return null;
   });
 
   return retObj;
@@ -272,6 +274,8 @@ const parsePointsAgainstPlaytime = (rawData) => {
   rawData.slice(1, -1).map((point) => {
     point = point.split(',');
     retObj.push({ x: point[1], y: point[0] });
+
+    return null;
   });
 
   return retObj;
