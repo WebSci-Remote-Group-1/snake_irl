@@ -26,7 +26,7 @@ def generateUser():
 def pushUserToMongo( userObj ):
     dbClient = pymongo.MongoClient( os.environ['MGDB_PLAYER_URI'] )
 
-    player_accounts_col = dbClient['snake_irl']['dev_player_accounts']
+    player_accounts_col = dbClient['snake_irl']['player_accounts']
 
     player_accounts_col.insert_one( userObj )
 

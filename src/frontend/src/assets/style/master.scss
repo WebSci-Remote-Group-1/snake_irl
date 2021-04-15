@@ -9,3 +9,21 @@ body {
 h1 {
   color: $primary;
 }
+
+.leaflet-container {
+  min-width: 250px;
+  min-height: 350px;
+  max-height: 550px;
+  width: 33vw;
+  height: 25vh;
+}
+
+@media screen and (max-width: 600px) {
+  .leaflet-container {
+    min-width: 250px;
+    min-height: 350px;
+    max-height: 450px;
+    width: 100vw;
+    height: 25vh;
+  }
+}

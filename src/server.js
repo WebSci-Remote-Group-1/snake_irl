@@ -5,12 +5,13 @@
 // Package imports
 const express = require('express');
 const path = require('path');
-const { MongoClient, ObjectID } = require('mongodb');
 const config = require('config');
+const { ObjectID } = require('mongodb');
 require('dotenv').config();
 
 // Homebrew imports
 const MGDB_PlayerInterface = require('./lib/player_lib');
+const MGDB_MapInterface = require('./lib/map_lib');
 const VisualizationUtil = require('./lib/visualization_lib');
 
 // Globals
@@ -50,6 +51,37 @@ app.get(api_path + '/player/:username', (req, res) => {
       response = { error: err };
     })
     .finally(() => res.status(status).json(response));
+});
+
+// Fetch map information
+app.get(api_path + '/maps/:id?', (req, res) => {
+  let response = null;
+  let status = 200;
+
+  if (req.params.id == null) {
+    query = {};
+    if (req.query.author) query.mapOwner = new ObjectID(req.query.author);
+    MGDB_MapInterface.fetchMaps(query)
+      .then((resp) => {
+        response = resp;
+        response == null ? (status = 500) : null;
+      })
+      .catch((err) => {
+        console.error('ERROR: ', err);
+        response = { error: err };
+      })
+      .finally(() => res.status(status).json(response));
+  } else
+    MGDB_MapInterface.fetchMap(new ObjectID(req.params.id))
+      .then((resp) => {
+        response = resp;
+        response == null ? (status = 500) : null;
+      })
+      .catch((err) => {
+        console.error('ERROR: ', err);
+        response = { error: err };
+      })
+      .finally(() => res.status(status).json(response));
 });
 
 /*
