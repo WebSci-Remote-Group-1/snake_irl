@@ -9,7 +9,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import snake_irl_theme from '@components/shared/material-theme-overrides';
 
 import '@assets/style/master.scss';
-import TempPlay from './components/TempPlay';
+import Game from './components/Game';
 import MissionSelect from './components/MissionSelect';
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
                     {' '}
                     {/* Mobile Routing */}
                     <Route exact path="/" component={MobileIndex} />
-                    <Route exact path="/play" component={TempPlay} />
+                    <Route exact path="/play" component={Game} />
                     <Route exact path="/select" component={MissionSelect} />
                   </Switch>
                 ) : (
