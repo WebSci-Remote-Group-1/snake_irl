@@ -1,6 +1,8 @@
 // Import React, tools and helpers
 import React, { useState, Component, createRef, forwardRef } from 'react';
 
+import 'leaflet/dist/leaflet.css';
+
 // Import MaterialUI elements
 import {
   Box,
@@ -32,6 +34,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import '@assets/style/create.scss';
 import Header from '@components/shared/Header';
 import MapSelect from '@components/shared/MapSelect';
+import MapDisplay from '@components/shared/MapDisplay';
 
 const StartCreateNewMap = forwardRef((props, ref) => {
   const [open, setOpen] = useState(false);
@@ -147,13 +150,13 @@ class MapEditor extends Component {
 
   handleAddPointSave = () => {
     switch (true) {
-      case this.state.addPointName == '':
+      case this.state.addPointName === '':
         this.setState({ addPointError: 'name' });
         break;
-      case this.state.addPointLat == '':
+      case this.state.addPointLat === '':
         this.setState({ addPointError: 'lat' });
         break;
-      case this.state.addPointLong == '':
+      case this.state.addPointLong === '':
         this.setState({ addPointError: 'long' });
         break;
       default:
@@ -209,10 +212,9 @@ class MapEditor extends Component {
             <Box mt={10}>
               <Grid container justify="space-evenly">
                 <Grid item>
-                  <img
-                    src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.androidbeat.com%2Fwp-content%2Fuploads%2F2014%2F11%2Fgoogle_maps_api.png&f=1&nofb=1"
-                    id="map_ph"
-                  />
+                  {this.state.map ? (
+                    <MapDisplay mapID={this.state.map._id} />
+                  ) : null}
                 </Grid>
                 <Grid item>
                   <TableContainer
@@ -280,7 +282,7 @@ class MapEditor extends Component {
                 fullWidth
                 variant="outlined"
                 onChange={this.handleAddPointInputChange}
-                error={this.state.addPointError == 'name'}
+                error={this.state.addPointError === 'name'}
               />
             </Box>
             <Box mb={2}>
@@ -291,7 +293,7 @@ class MapEditor extends Component {
                 fullWidth
                 variant="outlined"
                 onChange={this.handleAddPointInputChange}
-                error={this.state.addPointError == 'lat'}
+                error={this.state.addPointError === 'lat'}
               />
             </Box>
             <Box mb={2}>
@@ -302,7 +304,7 @@ class MapEditor extends Component {
                 fullWidth
                 variant="outlined"
                 onChange={this.handleAddPointInputChange}
-                error={this.state.addPointError == 'long'}
+                error={this.state.addPointError === 'long'}
               />
             </Box>
           </DialogContent>
@@ -365,6 +367,14 @@ class Create extends Component {
       </>
     );
   }
+
+  // render() {
+  //   return (
+  //     <>
+  //       <MapViewCard mapID="6074d236155b07b430f47acf" />
+  //     </>
+  //   );
+  // }
 }
 
 export default Create;

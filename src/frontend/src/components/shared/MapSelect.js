@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { RollBoxLoading } from 'react-loadingg';
 
 // Import material UI components
 import {
@@ -15,8 +16,7 @@ import {
 // Import material UI icons
 import DeleteIcon from '@material-ui/icons/Delete';
 
-// Import frontend demo placeholder files
-import Maps from '@assets/frontend-placeholders/created_maps.json';
+import API from '@root/src/api';
 
 // Invidual card for each map
 // Takes in the map OBJ it is displaying as well as optionally a designated
@@ -56,12 +56,25 @@ class MapSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapData: Maps['maps'], // Hard loaded maps for frontend presentation
+      mapData: null,
+      loading: true,
     };
   }
 
+  async componentDidMount() {
+    let mapData = await API.get('/api/v1/maps');
+    if (mapData.status === 200) {
+      this.setState({
+        mapData: mapData.data,
+        loading: false,
+      });
+    }
+  }
+
   render() {
-    return (
+    return this.state.loading ? (
+      <RollBoxLoading color="#acacac" />
+    ) : (
       <Grid
         container
         justify="center"
