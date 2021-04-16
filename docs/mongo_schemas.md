@@ -7,7 +7,7 @@
 ## Collections
 - 🚧 `player_accounts`: This collection is responsible for storing player account information
 - ❌ `games`: This collection is responsible for maintaining the history of played games on the app
-- ❌ `maps`: Responsible for maintaining all maps ( both published and draft ) for the game
+- 🚧 `maps`: Responsible for maintaining all maps ( both published and draft ) for the game
 
 ## Schemas
 - `player_accounts`: 
