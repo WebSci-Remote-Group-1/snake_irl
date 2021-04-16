@@ -1,6 +1,9 @@
 # snake_irl
 
 ## Installation
+### Configuring your database
+Take a look at the [database documentation](docs/mongo_schemas.md) for the required database collections and database users. Note that the database must be named "snake_irl"
+
 ### Required files
 Not included in this repo are several dotfiles, specifically `.env` files in several locations which provide connections to the mongoDB server.
 Here is a list of necesary `.env` files to run the game server:
