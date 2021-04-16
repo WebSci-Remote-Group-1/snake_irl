@@ -16,6 +16,9 @@
 - Elijah: 
   - Implemented `react-vis` data visualization for "Username Length vs Points" and "Player Age vs Points" to show additional relationships between the data
 
+- Alden:
+	- Implemented `react-vis` data visualization for "Time Since Last Login" and "Time Since Last Login vs Playtime" to show information about user retention
+
 # Installation Instructions
 
 Use `make clean install` to prepare the directory, and then
