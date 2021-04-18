@@ -10,8 +10,14 @@
 	- Implemented `react-vis` data visualization for "Player Age" and "Player Points vs Player Total Game Time"
 	- Added gradient coloring to graph visualizations
 
-- Brooke:
+- Brooke: 
 	- Implemented `react-vis` data visualization for "Player Playtime" and "Player Points" in order to give more context to the "Player Points vs Player Total Game Time" scatter plot
+
+- Elijah: 
+  - Implemented `react-vis` data visualization for "Username Length vs Points" and "Player Age vs Points" to show additional relationships between the data
+
+- Alden:
+	- Implemented `react-vis` data visualization for "Time Since Last Login" and "Time Since Last Login vs Playtime" to show information about user retention
 
 # Installation Instructions
 

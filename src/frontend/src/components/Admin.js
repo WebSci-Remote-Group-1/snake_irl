@@ -281,6 +281,68 @@ const parsePointsAgainstPlaytime = (rawData) => {
   return retObj;
 };
 
+const parsePointsAgainstUsername = (rawData) => {
+  let retObj = [];
+
+  rawData.slice(1, -1).map((point) => {
+    point = point.split(',');
+    retObj.push({ x: point[0].length, y: point[1] });
+
+    return null;
+  });
+
+  return retObj;
+};
+
+const parsePointsAgainstAge = (rawData) => {
+  let retObj = [];
+
+  rawData.slice(1, -1).map((point) => {
+    point = point.split(',');
+    retObj.push({ x: point[1], y: point[0] });
+
+    return null;
+  });
+
+  return retObj;
+};
+
+const parseTimeSinceLogin = (rawData) => {
+  let retObj = [
+    { x: '<1', y: 0 },
+    { x: '1-2', y: 0 },
+    { x: '3-4', y: 0 },
+    { x: '5-6', y: 0 },
+    { x: '7-9', y: 0 },
+    { x: '10+', y: 0 },
+  ];
+  const currentTime = Date.now();
+  rawData.slice(1, -1).forEach((point) => {
+    const loginTime = Date.parse(point.replaceAll('"', ''));
+    const yearsSinceLogin = (currentTime - loginTime) / (1000 * 60 * 60 * 24 * 365.2425);
+    if (yearsSinceLogin < 1) retObj[0].y++;
+    else if (yearsSinceLogin < 3) retObj[1].y++;
+    else if (yearsSinceLogin < 5) retObj[2].y++;
+    else if (yearsSinceLogin < 7) retObj[3].y++;
+    else if (yearsSinceLogin < 10) retObj[4].y++;
+    else retObj[5].y++;
+  });
+  console.log(retObj);
+  return retObj;
+}
+
+const parseTotalPlaytimeAgainstLastLogin = (rawData) => {
+  const currentTime = Date.now();
+  let retObj = rawData.slice(1, -1).map((point) => {
+    const [totalPlaytime, lastLogin] = point.split(',');
+    const loginTime = Date.parse(lastLogin.replaceAll('"', ''));
+    const yearsSinceLogin = (currentTime - loginTime) / (1000 * 60 * 60 * 24 * 365.2425);
+    return {x: yearsSinceLogin, y: totalPlaytime}
+  });
+  console.log(retObj);
+  return retObj;
+}
+
 // Admin page comp
 
 export const Admin = () => {
@@ -320,6 +382,36 @@ export const Admin = () => {
             parseData={parsePlaytime}
             xType="ordinal"
             dataSrc="/api/v1/data/players?filters=totalPlaytime"
+          />
+          <ScatterDataCard 
+            title="Username Length vs Points" 
+            parseData={parsePointsAgainstUsername} 
+            xType="linear" 
+            xlabel="Username Length" 
+            ylabel="Total Points"
+            dataSrc="/api/v1/data/players?filters=points,username" 
+          />
+          <ScatterDataCard 
+            title="Player Age vs Points" 
+            parseData={parsePointsAgainstAge} 
+            xType="linear" 
+            xlabel="Player Age" 
+            ylabel="Total Points"
+            dataSrc="/api/v1/data/players?filters=points,demographics.age" 
+          />
+          <BarDataCard
+            title="Time Since Last Login"
+            parseData={parseTimeSinceLogin}
+            xType="ordinal"
+            dataSrc="/api/v1/data/players?filters=lastLogin"
+          />
+          <ScatterDataCard 
+            title="Time Since Last Login vs Playtime" 
+            parseData={parseTotalPlaytimeAgainstLastLogin} 
+            xType="linear" 
+            xlabel="Time Since Last Login (years)" 
+            ylabel="Hours Played"
+            dataSrc="/api/v1/data/players?filters=totalPlaytime,lastLogin" 
           />
         </Grid>
       </Container>
