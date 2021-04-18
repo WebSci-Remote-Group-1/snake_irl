@@ -13,12 +13,12 @@ Here is a list of necesary `.env` files to run the game server:
   - `MGDB_MAPMANAGER` &rarr; a username-password pair for a mongo user in the form `<mongo username>:<mongo password>`
 
 While not necesary for running the actual server, there is another `.env` file in the project for some convenience in the `/src/backend/helperTools/.env`
+
 _The helper tools include some python scripts for things like random user generation as well as easier human-map batch entry, not including this file will not impact snakeIRL's ability to run or to be developed_
 - `MGDB_PLAYER_URI` &rarr; a full mongo uri in the form `<mongo protocol header>://<mongo username>:<mongo password>@<mongo server URI>`
 - `MGDB_MAP_URI` &rarr; a full mongo uri in the form `<mongo protocol header>://<mongo username>:<mongo password>@<mongo server URI>`
 
 ### Setup and Execution
-In the root of this project there is a Makefile which is used for easy installation, running, and uninstallation
 
 _Note that this project assumes that you have installed nodejs >= 15 and npm_
 
