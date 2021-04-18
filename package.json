@@ -10,7 +10,7 @@
     "heroku-prebuild": "cd src && yarn install",
     "start": "cd src/backend && npm start",
     "dev": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm start\"",
-    "heroku-postbuild": "cd src && npm run build"
+    "heroku-postbuild": "cd src/backend && npm run build"
   },
   "repository": {
     "type": "git",
