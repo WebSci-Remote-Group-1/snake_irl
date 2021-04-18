@@ -128,7 +128,7 @@ app.get(api_path + '/data/:datatype', (req, res) => {
 });
 
 if (process.env.NODE_ENV == 'production') {
-  const siteRoot = path.join(__dirname, 'frontend', 'build');
+  const siteRoot = path.join(__dirname, '..', 'frontend', 'build');
   app.use(express.static(siteRoot));
   app.get('*', (req, res) => {
     res.sendFile('index.html', { root: siteRoot });

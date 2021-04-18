@@ -1,8 +1,34 @@
 {
+  "name": "Snake_IRL",
+  "version": "b1.0.0",
+  "description": "Enjoy the classic game of snake but without the burdens of being constrained to a team",
+  "main": "src/backend/server.js",
+  "directories": {
+    "doc": "docs"
+  },
   "scripts": {
     "heroku-prebuild": "cd src && yarn install",
-    "start": "cd src && npm start",
-    "heroku-postbuild": "cd src && npm run build"
+    "start": "cd src/backend && npm start",
+    "dev-start": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm start\"",
+    "dev-install": "npm install yarn && yarn install && cd src/frontend && yarn install && cd ../backend && yarn install",
+    "heroku-postbuild": "cd src/backend && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebSci-Remote-Group-1/snake_irl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WebSci-Remote-Group-1/snake_irl/issues"
+  },
+  "homepage": "https://github.com/WebSci-Remote-Group-1/snake_irl#readme",
+  "devDependencies": {
+    "concurrently": "^6.0.2"
+  },
+  "dependencies": {
+    "yarn": "^1.22.10"
   },
   "engines": {
     "node": ">=15",
