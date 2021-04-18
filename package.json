@@ -1,8 +1,8 @@
 {
-  "name": "TermProj",
-  "version": "1.0.0",
-  "description": "## Installation ### Configuring your database Take a look at the [database documentation](docs/mongo_schemas.md) for the required database collections and database users. Note that the database must be named \"snake_irl\"",
-  "main": "index.js",
+  "name": "Snake_IRL",
+  "version": "b1.0.0",
+  "description": "Enjoy the classic game of snake but without the burdens of being constrained to a team",
+  "main": "src/backend/server.js",
   "directories": {
     "doc": "docs"
   },
