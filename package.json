@@ -29,5 +29,9 @@
   },
   "dependencies": {
     "yarn": "^1.22.10"
+  },
+  "engines": {
+    "node": ">=15",
+    "yarn": ">=1.22"
   }
 }
