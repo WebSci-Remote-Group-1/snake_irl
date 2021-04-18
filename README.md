@@ -7,13 +7,13 @@ Take a look at the [database documentation](docs/mongo_schemas.md) for the requi
 ### Required files
 Not included in this repo are several dotfiles, specifically `.env` files in several locations which provide connections to the mongoDB server.
 Here is a list of necesary `.env` files to run the game server:
-- `/src/.env`
+- `/src/backend/.env`
   - `MONGO_URI` &rarr; a URI to a mongo server in the form _(note that this does not include the URI protocol)_ `<mongo server URI>`
   - `MGDB_PLAYERMANAGER` &rarr; a username-password pair for a mongo user in the form `<mongo username>:<mongo password>`
   - `MGDB_MAPMANAGER` &rarr; a username-password pair for a mongo user in the form `<mongo username>:<mongo password>`
 
-While not necesary for running the actual server, there is another `.env` file in the project for some convenience in the `/src/helperTools/.env`
-_The helper tools include some python scripts for things like random user generation as well as easier human-map batch entry_
+While not necesary for running the actual server, there is another `.env` file in the project for some convenience in the `/src/backend/helperTools/.env`
+_The helper tools include some python scripts for things like random user generation as well as easier human-map batch entry, not including this file will not impact snakeIRL's ability to run or to be developed_
 - `MGDB_PLAYER_URI` &rarr; a full mongo uri in the form `<mongo protocol header>://<mongo username>:<mongo password>@<mongo server URI>`
 - `MGDB_MAP_URI` &rarr; a full mongo uri in the form `<mongo protocol header>://<mongo username>:<mongo password>@<mongo server URI>`
 
