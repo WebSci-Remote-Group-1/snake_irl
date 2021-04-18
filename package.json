@@ -9,7 +9,8 @@
   "scripts": {
     "heroku-prebuild": "cd src && yarn install",
     "start": "cd src/backend && npm start",
-    "dev": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm start\"",
+    "dev-start": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm start\"",
+    "dev-install": "npm install yarn && yarn install && cd src/frontend && yarn install && cd ../backend && yarn install",
     "heroku-postbuild": "cd src/backend && npm run build"
   },
   "repository": {
@@ -25,5 +26,8 @@
   "homepage": "https://github.com/WebSci-Remote-Group-1/snake_irl#readme",
   "devDependencies": {
     "concurrently": "^6.0.2"
+  },
+  "dependencies": {
+    "yarn": "^1.22.10"
   }
 }
