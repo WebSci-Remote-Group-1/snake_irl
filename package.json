@@ -1,11 +1,29 @@
 {
+  "name": "TermProj",
+  "version": "1.0.0",
+  "description": "## Installation ### Configuring your database Take a look at the [database documentation](docs/mongo_schemas.md) for the required database collections and database users. Note that the database must be named \"snake_irl\"",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
   "scripts": {
     "heroku-prebuild": "cd src && yarn install",
-    "start": "cd src && npm start",
+    "start": "cd src/backend && npm start",
+    "dev": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm start\"",
     "heroku-postbuild": "cd src && npm run build"
   },
-  "engines": {
-    "node": ">=15",
-    "yarn": ">=1.22"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebSci-Remote-Group-1/snake_irl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WebSci-Remote-Group-1/snake_irl/issues"
+  },
+  "homepage": "https://github.com/WebSci-Remote-Group-1/snake_irl#readme",
+  "devDependencies": {
+    "concurrently": "^6.0.2"
   }
 }
