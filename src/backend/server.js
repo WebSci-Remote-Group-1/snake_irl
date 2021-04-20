@@ -19,6 +19,7 @@ const app = express();
 const port =
   process.env.PORT == null ? config.get('api.port') : process.env.PORT;
 const api_path = config.get('api.api_path');
+const internal_path = config.get('api.internal_api_path');
 
 app.use(express.json());
 
@@ -32,6 +33,41 @@ app.use(express.json());
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+/*
+ * =======================================
+ * Internal Endpoints
+ * =======================================
+ */
+
+app.post(internal_path + '/login', (req, res) => {
+  if (
+    req.body.username === null ||
+    req.body.username === undefined ||
+    req.body.password === null ||
+    req.body.password === undefined
+  ) {
+    console.log('Missing field');
+    res.status(400).json({
+      error: 'You are missing a required field',
+    });
+
+    return;
+  }
+
+  MGDB_PlayerInterface.userExists(req.body.username);
+  console.log(
+    `Logining in user: ${req.body.username} with password: ${req.body.password}`
+  );
+
+  res.json({ message: 1 });
+});
+
+/*
+ * =======================================
+ * API Endpoints
+ * =======================================
+ */
 
 // Example test endpoint
 app.get(api_path + '/hello', (req, res) => {

@@ -36,4 +36,12 @@ const fetchUser = (usrname, filter = null) =>
 const fetchUsers = (filter = null) =>
   MGDB_Core.find(mongoURI, config.get('database.player_accounts'), {}, filter);
 
-module.exports = { createUser, fetchUser, fetchUsers };
+const userExists = (username) =>
+  new Promise((resolve) => {
+    fetchUser(username).then((resp) => {
+      console.log(resp);
+      resolve(resp);
+    });
+  });
+
+module.exports = { createUser, fetchUser, fetchUsers, userExists };
