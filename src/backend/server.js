@@ -45,6 +45,17 @@ app.listen(port, () => {
  * =======================================
  */
 
+/* Attempt to login a user
+ *
+ * Upon successful login an auth cookie is set with the user's ID. This will
+ * represent how the user authenticates privileged actions
+ *
+ * This requires a JSON body object of the form:
+ *	{
+ *		username: <Username>,
+ *		password: <Plaintext password>,
+ *	}
+ */
 app.post(internal_path + '/login', (req, res) => {
   if (
     req.body.username === null ||
@@ -83,6 +94,24 @@ app.post(internal_path + '/login', (req, res) => {
   });
 });
 
+/* Register a new user
+ *
+ * Note that this endpoint does not set a user auth cookie, users will need to
+ * login after registering to be allowed privileged actions
+ *
+ * This requires a JSON body object of the form:
+ * {
+ *	username: <Username>,
+ *	password: <Plaintext password>,
+ *	demographics: {
+ *		age: <Player age>,
+ *		homebase: {
+ *			lat: <Player latitude>,
+ *			long: <Player longitude>
+ *		}
+ *	}
+ * }
+ */
 app.post(internal_path + '/register', (req, res) => {
   if (
     req.body.username === null ||
