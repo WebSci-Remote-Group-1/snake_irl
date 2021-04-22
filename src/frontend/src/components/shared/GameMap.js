@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Icon } from 'leaflet';
+import L, { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
   MapContainer,
   TileLayer,
   Popup,
   Tooltip,
-  Polyline
+  MapConsumer
 } from 'react-leaflet';
 import DefaultMarker from '@assets/img/mapPinDefault.svg';
 import ReactLeafletDriftMarker from 'react-leaflet-drift-marker';
@@ -91,8 +91,8 @@ export default class GameMap extends Component {
           updateSnake[i] = updateSnake[i-1];
         }
       }
+      this.setState({internalSnake: updateSnake})
     }
-    this.setState({internalSnake: updateSnake})
 
     return {
       lat: newLoc.lat,
@@ -112,6 +112,23 @@ export default class GameMap extends Component {
                   attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
+                <MapConsumer>
+                  {(map) => {
+                    var firstPolyLine = new L.Polyline(this.state.internalSnake, this.snakeTrail);
+                    for (var i in map._layers){
+                      if(map._layers[i]._path != undefined){
+                        try {
+                          map.removeLayer(map._layers[i]);
+                        }
+                        catch(e) {
+                          console.log("problem with " + e + map._layers[i]);
+                        }
+                      }
+                    }
+                    map.addLayer(firstPolyLine);
+                    return null;
+                  }}
+                </MapConsumer>
                 <ReactLeafletDriftMarker
                   position={this.state.latlng}
                   duration={2000}
@@ -125,13 +142,10 @@ export default class GameMap extends Component {
                   }
                 >
                   <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
+                    This is the current head of the snake!
                   </Popup>
-                  <Tooltip>Tooltip for Marker</Tooltip>
+                  <Tooltip>Snake Head</Tooltip>
                 </ReactLeafletDriftMarker>
-                <Polyline
-                  pathOptions={this.snakeTrail}
-                  positions={this.state.internalSnake}/>
               </MapContainer>
             ) : (
               <div>
