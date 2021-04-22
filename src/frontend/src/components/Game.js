@@ -1,24 +1,37 @@
 import React from 'react';
 import {
-  Container,
+  Box,
 } from '@material-ui/core';
+import Leaflet, { Icon } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  MapConsumer,
+} from 'react-leaflet';
+import DefaultMarker from '@assets/img/mapPinDefault.svg';
+import GameMap from './shared/GameMap.js'
+import { RollBoxLoading } from 'react-loadingg';
 import HaversineGeolocation from 'haversine-geolocation';
 import Header from './shared/Header.js'
 import API from '../api';
 
-var internal_snake = [] // initialized at current location
 var num_segs = 8;
 var uninitialized = true;
 var seg_len = 10;
 var err_margin = 0.0;
-
-
+var mapCenter = [42.72983440371727, -73.68997137045602];
+var internal_snake = [mapCenter] // initialized at current location
 
 var options = {
   enableHighAccuracy: true,
   timeout: 5000,
   maximumAge: 0,
 };
+
 function success(pos) {
   var crd = pos.coords;
   var i = 0;
@@ -27,9 +40,11 @@ function success(pos) {
       internal_snake[i] = [crd.latitude, crd.longitude]
     }
     err_margin = crd.accuracy;
+    mapCenter = [crd.latitude, crd.longitude]
     uninitialized = false;
   }
   else{
+    err_margin = crd.accuracy;
     var points = [
       {
         latitude: crd.latitude,
@@ -52,7 +67,6 @@ function success(pos) {
       }
     }
   }
-  console.log(JSON.stringify(internal_snake));
 }
 
 function errors(err) {
@@ -62,7 +76,9 @@ function errors(err) {
 export default class Game extends React.Component {
   constructor(props){
     super(props);
-    this.state = {intervalId: 0}
+    this.state = {
+      intervalId: 0
+    }
     this.componentDidMount = this.componentDidMount.bind(this);
   }
   componentDidMount() {
@@ -95,8 +111,9 @@ export default class Game extends React.Component {
             }
           };
         });
+      
     } else {
-      alert("Sorry Not available!");
+      alert("Sorry, not available!");
     }
   }
   componentWillUnmount() {
@@ -106,8 +123,13 @@ export default class Game extends React.Component {
     return (
       <>
         <Header/>
-        <Container>
-        </Container>
+        <Box width="50%" minWidth="200px" height="100%" minHeight="200px">
+          {!uninitialized ? (
+            <RollBoxLoading color="#acacac" />
+          ) : (
+            <GameMap/>
+          )}
+        </Box>
       </>
     );
   }

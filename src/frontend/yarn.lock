@@ -7387,7 +7387,12 @@
     "lodash" "^4.17.5"
     "webpack-sources" "^1.1.0"
 
-"leaflet@^1.7.1":
+"leaflet-drift-marker@^2.0.0":
+  "integrity" "sha512-dmYMW5A/rpNA2YGnakMzhhQNGJADjJG1L6THa/UKMYZ/CI3podhmsCaWCNh0/DnqcxRaSCR/8JBp+iimNx7lEQ=="
+  "resolved" "https://registry.npmjs.org/leaflet-drift-marker/-/leaflet-drift-marker-2.0.0.tgz"
+  "version" "2.0.0"
+
+"leaflet@^1.7.1", "leaflet@>=1.2.0", "leaflet@>=1.7":
   "integrity" "sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw=="
   "resolved" "https://registry.npmjs.org/leaflet/-/leaflet-1.7.1.tgz"
   "version" "1.7.1"
@@ -9708,7 +9713,14 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.1.tgz"
   "version" "17.0.1"
 
-"react-leaflet@^3.1.0":
+"react-leaflet-drift-marker@^3.0.0":
+  "integrity" "sha512-SXyvplhe93Ns1mNQYijLHU1dF1Awjaw9kCA5Wp4UuXFPEieWU/MeadhJnDcSJEATNtknT+DeDlMmUvnHX4M08w=="
+  "resolved" "https://registry.npmjs.org/react-leaflet-drift-marker/-/react-leaflet-drift-marker-3.0.0.tgz"
+  "version" "3.0.0"
+  dependencies:
+    "leaflet-drift-marker" "^2.0.0"
+
+"react-leaflet@^3.1.0", "react-leaflet@3.x":
   "integrity" "sha512-kdZS8NYbYFPmkQr7zSDR2gkKGFeWvkxqoqcmZEckzHL4d5c85dJ2gbbqhaPDpmWWgaRw9O29uA/77qpKmK4mTQ=="
   "resolved" "https://registry.npmjs.org/react-leaflet/-/react-leaflet-3.1.0.tgz"
   "version" "3.1.0"
@@ -9880,7 +9892,7 @@
     "prop-types" "^15.5.8"
     "react-motion" "^0.5.2"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^0.14.9 || ^15.3.0 || ^16.0.0", "react@^16.8.0 || ^17.0.0", "react@^16.8.6", "react@^17.0.1", "react@>= 16", "react@>= 16.3.0", "react@>=0.14.0", "react@>=15", "react@>=15 || ^0.14.7", "react@>=16.6.0", "react@15.3.0 - 16.x", "react@17.0.1":
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^0.14.9 || ^15.3.0 || ^16.0.0", "react@^16.8.0 || ^17.0.0", "react@^16.8.6", "react@^17.0.1", "react@>= 16", "react@>= 16.3.0", "react@>=0.14.0", "react@>=15", "react@>=15 || ^0.14.7", "react@>=16.6.0", "react@>=16.8.0", "react@15.3.0 - 16.x", "react@17.0.1":
   "integrity" "sha512-lG9c9UuMHdcAexXtigOZLX8exLWkW0Ku29qPRU8uhF2R9BN96dLCt0psvzPLlHc5OWkgymP3qwTRgbnw5BKx3w=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.1.tgz"
   "version" "17.0.1"
