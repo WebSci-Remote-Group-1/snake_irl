@@ -10,9 +10,10 @@ import {
 } from 'react-leaflet';
 import DefaultMarker from '@assets/img/mapPinDefault.svg';
 import ReactLeafletDriftMarker from 'react-leaflet-drift-marker';
+import {geolocated} from 'react-geolocated';
 import HaversineGeolocation from 'haversine-geolocation';
 
-export default class GameMap extends Component {
+class GameMap extends Component {
   mapCenter = {
     lat: 42.72983440371727,
     lng: -73.68997137045602
@@ -33,71 +34,51 @@ export default class GameMap extends Component {
     for(var i=0; i<this.state.numSegs; i++){
       initsnake = initsnake.concat([[this.mapCenter.lat, this.mapCenter.lng]])
     }
-    this.setState({internalSnake: initsnake}, () => {console.log(this.state.internalSnake)});
-    if (navigator.geolocation) {
-      navigator.permissions
-      .query({ name: "geolocation" })
-      .then(function (result) {
-        if (result.state === "granted") {
-          console.log(result.state);
-          self.repeat();
-        } else if (result.state === "denied") {
-          self.setState(() => ({
-            grantedAccess: false
-          }));
-        }
-        result.onchange = function () {
-          console.log(result.state);
-          if (result.state === "granted"){
-            self.repeat()
-          }
-        };
-      });
-    }
+    this.setState({internalSnake: initsnake}, () => {this.repeat()});
   }
 
   repeat = () => {
     setTimeout(() => {
       // updates position every 5 sec
-      this.setState({ latlng: this.gen_position() }, this.repeat);
-    }, 2000);
+      this.calcPlace();
+    }, 500);
   };
+  
+  calcPlace() {
+    var crd = this.props.coords;
+    var currLatlng = {
+      lat: crd.latitude,
+      lng: crd.longitude,
+    }
+    var curErrMargin = crd.accuracy;
 
-  gen_position() {
-    var newLoc = this.state.latlng;  
-
-    newLoc.lat += Math.random() * 0.05 - 0.025;
-    newLoc.lng += Math.random() * 0.025 - 0.0125;
-
+    this.setState({latlng: currLatlng, errMargin: curErrMargin});
     var points = [
       {
-        latitude: newLoc.lat,
-        longitude: newLoc.lng
+        latitude: currLatlng.lat,
+        longitude: currLatlng.lng
       },
       {
         latitude: this.state.internalSnake[0][0],
         longitude: this.state.internalSnake[0][1]
       }
     ]
-
     var m_diff = HaversineGeolocation.getDistanceBetween(points[0], points[1], 'm')
     if(m_diff >= this.state.segLen){
       var updateSnake = this.state.internalSnake;
       for(var i = this.state.numSegs-1; i >= 0; i--){
         if(i === 0){
-          updateSnake[i] = [newLoc.lat, newLoc.lng];
+          updateSnake[i] = [currLatlng.lat, currLatlng.lng];
         }
         else{
           updateSnake[i] = updateSnake[i-1];
         }
       }
-      this.setState({internalSnake: updateSnake})
+      this.setState({internalSnake: updateSnake}, this.repeat)
     }
-
-    return {
-      lat: newLoc.lat,
-      lng: newLoc.lng
-    };
+    else{
+      this.repeat();
+    }
   }
 
   snakeTrail = {color: 'black'}
@@ -162,3 +143,10 @@ export default class GameMap extends Component {
     );
   }
 }
+export default geolocated({
+  positionOptions: {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  },
+})(GameMap);

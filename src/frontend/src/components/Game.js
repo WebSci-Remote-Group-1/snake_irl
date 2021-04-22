@@ -2,22 +2,10 @@ import React from 'react';
 import {
   Box,
 } from '@material-ui/core';
-import Leaflet, { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Polyline,
-  MapConsumer,
-} from 'react-leaflet';
-import DefaultMarker from '@assets/img/mapPinDefault.svg';
 import GameMap from './shared/GameMap.js'
 import { RollBoxLoading } from 'react-loadingg';
-import HaversineGeolocation from 'haversine-geolocation';
 import Header from './shared/Header.js'
-import API from '../api';
 
 var uninitialized = true;
 
