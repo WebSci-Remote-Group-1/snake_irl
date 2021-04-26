@@ -7,6 +7,9 @@ const express = require('express');
 const path = require('path');
 const config = require('config');
 const { ObjectID } = require('mongodb');
+const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser');
+
 require('dotenv').config();
 
 // Homebrew imports
@@ -19,8 +22,11 @@ const app = express();
 const port =
   process.env.PORT == null ? config.get('api.port') : process.env.PORT;
 const api_path = config.get('api.api_path');
+const internal_path = config.get('api.internal_api_path');
 
+// Middleware injection
 app.use(express.json());
+app.use(cookieParser());
 
 /*
  * =======================================
@@ -32,6 +38,128 @@ app.use(express.json());
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+/*
+ * =======================================
+ * Internal Endpoints
+ * =======================================
+ */
+
+/* Attempt to login a user
+ *
+ * Upon successful login an auth cookie is set with the user's ID. This will
+ * represent how the user authenticates privileged actions
+ *
+ * This requires a JSON body object of the form:
+ *	{
+ *		username: <Username>,
+ *		password: <Plaintext password>,
+ *	}
+ */
+app.post(internal_path + '/login', (req, res) => {
+  if (
+    req.body.username === null ||
+    req.body.username === undefined ||
+    req.body.password === null ||
+    req.body.password === undefined
+  ) {
+    console.log('Missing field');
+    res.status(400).json({
+      error: 'You are missing a required field',
+    });
+
+    return;
+  }
+
+  const username = req.body.username;
+  const password = req.body.password;
+
+  MGDB_PlayerInterface.userExists(username).then((exists) => {
+    if (!exists) {
+      res.status(400).json({ error: 'User does not exist' });
+      return;
+    }
+
+    MGDB_PlayerInterface.fetchUser(username).then((user) => {
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err) res.status(500).json({ error: err });
+        else if (result) {
+          MGDB_PlayerInterface.userLogin(username);
+          res
+            .cookie('auth', new ObjectID(user._id).toString())
+            .json({ message: 'Authenticated' });
+        } else res.json({ message: 'Not authenticated' });
+      });
+    });
+  });
+});
+
+/* Register a new user
+ *
+ * Note that this endpoint does not set a user auth cookie, users will need to
+ * login after registering to be allowed privileged actions
+ *
+ * This requires a JSON body object of the form:
+ * {
+ *	username: <Username>,
+ *	password: <Plaintext password>,
+ *	demographics: {
+ *		age: <Player age>,
+ *		homebase: {
+ *			lat: <Player latitude>,
+ *			long: <Player longitude>
+ *		}
+ *	}
+ * }
+ */
+app.post(internal_path + '/register', (req, res) => {
+  if (
+    req.body.username === null ||
+    req.body.username === undefined ||
+    req.body.password === null ||
+    req.body.password === undefined ||
+    req.body.demographics === null ||
+    req.body.demographics === undefined ||
+    req.body.demographics.age === null ||
+    req.body.demographics.age === undefined ||
+    req.body.demographics.homebase === null ||
+    req.body.demographics.homebase === undefined ||
+    req.body.demographics.homebase.lat === null ||
+    req.body.demographics.homebase.lat === undefined ||
+    req.body.demographics.homebase.long === null ||
+    req.body.demographics.homebase.long === undefined
+  ) {
+    res.status(400).json({
+      error: 'You are missing a required field',
+    });
+    return;
+  }
+
+  MGDB_PlayerInterface.userExists(req.body.username).then((exists) => {
+    exists
+      ? res.status(400).json({ error: 'User already exists' })
+      : bcrypt.hash(req.body.password, 10, (err, hash) => {
+          if (err) res.status(500).json({ error: err });
+          const userDoc = {
+            username: req.body.username,
+            password: hash,
+            demographics: req.body.demographics,
+          };
+
+          MGDB_PlayerInterface.createUser(userDoc).then((resp) => {
+            resp
+              ? res.json({ message: 'User registered' })
+              : res.status(500).json({ error: 'Could not insert user' });
+          });
+        });
+  });
+});
+
+/*
+ * =======================================
+ * API Endpoints
+ * =======================================
+ */
 
 // Example test endpoint
 app.get(api_path + '/hello', (req, res) => {

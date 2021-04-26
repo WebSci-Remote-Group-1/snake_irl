@@ -21,7 +21,7 @@
 
 # Installation Instructions
 
-Use `make clean install` to prepare the directory, and then
-`make all` to start both the frontend and backend.
+Use `npm run dev-install` in the project root to prepare the directory, and then
+`yarn run dev-start` to start both the frontend and backend.
 
-`yarn` is preferred as `react-vis` has a minor dependency error with the latest version of `react`, `npm` can work but you need to use the `--force` flag. Additionally, two .env files are required, one in /src, and one in /src/helperTools. These can be provided upon request, but are not included in the repository by default.
+`yarn` is preferred as `react-vis` has a minor dependency error with the latest version of `react`, `npm` can work but you need to use the `--force` flag. Additionally, two .env files are required, one in /src/backend, and one in /src/backend/helperTools. These can be provided upon request, but are not included in the repository by default.

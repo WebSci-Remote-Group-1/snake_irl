@@ -73,13 +73,7 @@ const find = (mongoURI, collectionName, query, filter) =>
       });
   });
 
-const updateInsertOne = (
-  mongoURI,
-  collectionName,
-  query,
-  updateDoc,
-  options = { upsert: true }
-) =>
+const updateOne = (mongoURI, collectionName, query, updateDoc, options = {}) =>
   new Promise((resolve, reject) => {
     fetchMongoConnection(mongoURI)
       .then((connection) => {
@@ -92,10 +86,31 @@ const updateInsertOne = (
       .then((response) => {
         mongoClient.close();
         response
-          ? resolve({ status: 0, message: 'Update/Insert operation completed' })
+          ? resolve({ status: 0, message: 'Update operation completed' })
           : reject({
               status: -1,
-              message: 'ERROR: Could not update or insert',
+              message: 'ERROR: Could not update',
+            });
+      });
+  });
+
+const insertOne = (mongoURI, collectionName, insertDoc, options = {}) =>
+  new Promise((resolve, reject) => {
+    fetchMongoConnection(mongoURI)
+      .then((connection) => {
+        mongoClient = connection;
+        return mongoClient
+          .db('snake_irl')
+          .collection(collectionName)
+          .insertOne(insertDoc, options);
+      })
+      .then((response) => {
+        mongoClient.close();
+        response
+          ? resolve({ status: 0, message: 'Insert operation completed' })
+          : reject({
+              status: -1,
+              message: 'ERROR: Could not insert',
             });
       });
   });
@@ -105,5 +120,6 @@ module.exports = {
   fetchMongoConnection,
   findOne,
   find,
-  updateInsertOne,
+  updateOne,
+  insertOne,
 };
