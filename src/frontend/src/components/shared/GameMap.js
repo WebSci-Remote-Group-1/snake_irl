@@ -36,7 +36,7 @@ class GameMap extends Component {
     poisLeft: 10, // number of POIs left in the game
     poiArr: [], // array containing all POIs
     activePoi: {}, // obj holding current POI (name/lat/lng)
-    date: Date.now(), // when the game started
+    date: new Date(Date.now()), // when the game started
     distTraveled: 0 // how long the player traveled
   };
 
@@ -69,7 +69,7 @@ class GameMap extends Component {
     // point calculation
     var finalPoints = 0;
     finalPoints += (this.state.distTraveled * 5) // idk how i want to do this, this could be tweaked in the future
-    finalPoints += (this.state.lives * 50) // give extra weight lol
+    finalPoints += (this.state.lives * 500) // give extra weight lol
     if(this.state.win){ // extra points on a win
       finalPoints += 1000
     }
@@ -84,6 +84,7 @@ class GameMap extends Component {
       date: this.state.date,
       map: this.props.mapId,
     }
+    API.post("/api/v1/endGame", gameDataForUpload);
   }
   
   calcPlace() { // handles all of the messy stuff

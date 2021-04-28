@@ -15,6 +15,7 @@ require('dotenv').config();
 // Homebrew imports
 const MGDB_PlayerInterface = require('./lib/player_lib');
 const MGDB_MapInterface = require('./lib/map_lib');
+const MGDB_GameInterface = require('./lib/game_lib')
 const VisualizationUtil = require('./lib/visualization_lib');
 
 // Globals
@@ -93,6 +94,58 @@ app.post(internal_path + '/login', (req, res) => {
     });
   });
 });
+
+/* Add game data to the database
+ *
+ * Attempt to upload a game data object to database
+ * 
+ * Upon successful upload, the database gains the object sent at the end of a 
+ * game.
+ * 
+ * This requires a JSON body object of the form:
+ *  {
+ *    points: <number of points>,
+ *    date: <date object>
+ *    map: ID of the map that was played
+ *  }
+ * 
+ * This endpoint also uses the auth cookie to verify that the user is logged in.
+ */
+app.post(api_path + '/endGame', (req, res) => {
+  if (
+    req.body.points === null ||
+    req.body.points === undefined ||
+    req.body.date === null ||
+    req.body.date === undefined ||
+    req.body.map === null ||
+    req.body.map === undefined 
+  ) {
+    res.status(400).json({
+      error: 'You are missing a required field',
+    });
+    return;
+  }
+  if (
+    req.cookies.auth === null ||
+    req.cookies.auth === undefined
+  ) {
+    res.status(401).json({
+      error: 'No auth cookie!'
+    })
+  }
+  var gameObj = {
+    user: req.cookies.auth,
+    points: req.body.points,
+    date: req.body.date,
+    map: req.body.map
+  }
+  console.log(JSON.stringify(gameObj))
+  MGDB_GameInterface.createGame(gameObj).then((resp) => {
+    resp
+      ? res.json({ message: 'Game added!' })
+      : res.status(500).json({ error: 'Could not insert game' });
+  });
+})
 
 /* Register a new user
  *
