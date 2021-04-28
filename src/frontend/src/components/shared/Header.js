@@ -210,10 +210,10 @@ export default function Header(props) {
       <List>
         <ListItemLink
           icon={<PlayArrowIcon />}
-          primary="Mission Select"
-          to="/select"
+          primary="Play Game"
+          to="/play?rand=false"
         />
-        <ListItemLink icon={<ShuffleIcon />} primary="Random" to="/play" />
+        <ListItemLink icon={<ShuffleIcon />} primary="Random Game" to="/play?rand=true" />
       </List>
       <Divider />
       <Typography className={classes.sidebarHeader} variant="h4">
