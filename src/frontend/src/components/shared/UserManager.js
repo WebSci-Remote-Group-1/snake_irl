@@ -381,6 +381,7 @@ class UserManager extends Component {
   render() {
     const {user, open, anchorEl, openDialog} = this.state;
     return <>
+      {user && user.username}
       {
         {
           "register": <RegisterDialog onClose={() => this.handleCloseRegisterUser()} onRegister={() => this.updateActiveUser()}/>,
