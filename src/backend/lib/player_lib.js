@@ -87,4 +87,28 @@ const userLogin = (username) =>
       });
   });
 
-module.exports = { createUser, fetchUser, fetchUsers, userExists, userLogin };
+const updateUserTime = (updateTimeObj) =>
+  new Promise((resolve, reject) => {
+    fetchUser(updateTimeObj.username)
+      .then((resp) => {
+        resp === null || resp === undefined || resp.length === 0
+          ? reject("No such user")
+          : () => {
+            oldTime = resp.totalPlaytime
+            newTime = oldTime + updateTimeObj.time
+            MGDB_Core.updateOne(
+              mongoURI,
+              config.get('database.player_accounts'),
+              { username: updateTimeObj.username },
+              { $set: { totalPlaytime: newTime } }
+            )
+            .then((resp) => resolve(resp))
+            .catch((err) => {
+              console.error(err);
+              reject(err);
+            })
+          }
+      })
+  })
+
+module.exports = { createUser, fetchUser, fetchUsers, userExists, userLogin, updateUserTime };

@@ -139,10 +139,19 @@ app.post(api_path + '/endGame', (req, res) => {
     date: req.body.date,
     map: req.body.map
   }
-  console.log(JSON.stringify(gameObj))
+  var timeUpdateObj = {
+    username: req.cookies.auth,
+    time: req.body.elapsed
+  }
   MGDB_GameInterface.createGame(gameObj).then((resp) => {
     resp
-      ? res.json({ message: 'Game added!' })
+      ? (
+        MGDB_PlayerInterface.updateUserTime(timeUpdateObj).then((resp) => {
+          resp
+            ? res.json({ message: "Game posted" })
+            : res.status(500).json({ error: 'Could not update time '})
+        })
+      )
       : res.status(500).json({ error: 'Could not insert game' });
   });
 })

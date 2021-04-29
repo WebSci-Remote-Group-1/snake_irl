@@ -37,7 +37,8 @@ class GameMap extends Component {
     poiArr: [], // array containing all POIs
     activePoi: {}, // obj holding current POI (name/lat/lng)
     date: new Date(Date.now()), // when the game started
-    distTraveled: 0 // how long the player traveled
+    distTraveled: 0, // how long the player traveled
+    timeElapsed: 0 // in milliseconds
   };
 
   componentDidMount() {
@@ -59,7 +60,8 @@ class GameMap extends Component {
   repeat = () => {
     this.setState({ready: true})
     timerObj = setTimeout(() => {
-      // updates position every 5 sec
+      // updates position every 0.5 seconds
+      this.setState({timeElapsed: this.state.timeElapsed + 500})
       this.calcPlace();
     }, 500);
   };
@@ -83,6 +85,7 @@ class GameMap extends Component {
       points: this.state.points,
       date: this.state.date,
       map: this.props.mapId,
+      elapsed: this.state.timeElapsed
     }
     API.post("/api/v1/endGame", gameDataForUpload);
   }
