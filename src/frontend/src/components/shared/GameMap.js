@@ -200,9 +200,9 @@ class GameMap extends Component {
             this.state.ready ? (
               this.state.gameOver ? ( // game over
                 this.state.win ? ( // you win
-                  <h2>You win!</h2>
+                  <h1>You win!</h1>
                 ) : ( // you lose
-                  <h2>You lose...</h2>
+                  <h1>You lose...</h1>
                 )
               ) : ( // game not over
               <MapContainer center={this.mapCenter} zoom={13}>
