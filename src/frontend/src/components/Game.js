@@ -64,19 +64,7 @@ export default class Game extends Component {
   componentDidMount() {
     var self = this;
     if (navigator.geolocation) {
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then((result) => {
-          if (result.state === "granted") {
-            navigator.geolocation.getCurrentPosition(self.success, self.errors, self.options)
-          }
-          result.onchange = function () {
-            console.log(result.state);
-            if (result.state === "granted"){
-              navigator.geolocation.getCurrentPosition(self.success, self.errors, self.options)
-            }
-          };
-        });
+      navigator.geolocation.getCurrentPosition(self.success, self.errors, self.options)
     } else {
       alert("Sorry, not available!");
     }
