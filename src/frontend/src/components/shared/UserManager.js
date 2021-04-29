@@ -210,6 +210,8 @@ class RegisterDialog extends Component {
       } else {
         this.setState({errorMessageUsername: res.error});
       }
+    }).catch((err, res) => {
+      this.setState({errorMessageUsername: "error"});
     })
   }
 
@@ -265,8 +267,8 @@ class RegisterDialog extends Component {
           variant="outlined"
           value={age}
           InputLabelProps={{shrink: age ? true : false}}
-          error={errorMessageAge}
-          helperText={errorMessageAge}
+          error={age !== "" && age < 13}
+          helperText={age !== "" && age < 13 ? "You must be 13 years or older to play!": ""}
           style={{margin: "10px"}}
           onChange={event => this.handleFieldChange("age", event.target.value)}
         />
@@ -298,7 +300,7 @@ class RegisterDialog extends Component {
         <Button variant="contained" color="primary" onClick={() => {onClose()}}>
           Cancel <CancelIcon style={{marginLeft: "10px"}}/>
         </Button>
-        <Button variant="contained" color="primary" style={{marginLeft: "10px"}} disabled={!(username && password && retypePassword && (password == retypePassword) && age !== "" && lat !== "" && long != "")} onClick={() => {this.onRegisterButton()}}>
+        <Button variant="contained" color="primary" style={{marginLeft: "10px"}} disabled={!(username && password && retypePassword && (password == retypePassword) && age !== "" && age >= 13 && lat !== "" && long != "")} onClick={() => {this.onRegisterButton()}}>
           Register 
         </Button>
       </DialogActions>

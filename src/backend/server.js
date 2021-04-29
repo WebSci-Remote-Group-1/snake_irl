@@ -158,6 +158,13 @@ app.post(internal_path + '/register', (req, res) => {
     return;
   }
 
+  if (req.body.demographics.age < 13) {
+    res.status(400).json({
+      error: "You must be 13 years or older to play!",
+    });
+    return;
+  }
+
   MGDB_PlayerInterface.userExists(req.body.username).then((exists) => {
     exists
       ? res.status(400).json({ error: 'User already exists' })
