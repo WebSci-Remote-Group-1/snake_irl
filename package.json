@@ -1,15 +1,15 @@
 {
   "name": "Snake_IRL",
-  "version": "b1.0.0",
+  "version": "1.0.0",
   "description": "Enjoy the classic game of snake but without the burdens of being constrained to a team",
   "main": "src/backend/server.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "heroku-prebuild": "cd src && yarn install",
+    "heroku-prebuild": "cd src/backend && yarn install",
     "start": "cd src/backend && npm start",
-    "dev-start": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm start\"",
+    "dev-start": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm run dev-start\"",
     "dev-install": "npm install yarn && yarn install && cd src/frontend && yarn install && cd ../backend && yarn install",
     "heroku-postbuild": "cd src/backend && npm run build"
   },

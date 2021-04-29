@@ -5,7 +5,6 @@ Snake_IRL is the classic game Snake brought to real life. Snake_IRL provides two
 Note: please Snake responsibly -- Don't run in the street, don't trespass, and most of all, be conscious of your surroundings.
 
 # [Installation](docs/INSTALL.md)
-
 # [Security Information](docs/SECURITY.md)
 
 # [API Documentation](docs/API.md)
