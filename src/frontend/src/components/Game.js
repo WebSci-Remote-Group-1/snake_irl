@@ -29,17 +29,6 @@ export default class Game extends Component {
     console.log(this.state.rand) 
     this.cardClickHandler = this.cardClickHandler.bind(this);
     this.success = this.success.bind(this);
-    if (this.state.rand){ // get random map within area and set the map to that
-      API.get('/api/v1/maps').then((mapData) => {
-        if (mapData.status === 200){
-          var theMap = mapData.data[Math.floor(Math.random() * mapData.data.length)];
-          this.setState({
-            currMap: theMap._id,
-            mapSelected: true
-          })
-        }
-      })
-    }
   }
 
   success(pos) {
@@ -49,9 +38,24 @@ export default class Game extends Component {
         lat: pos.coords.latitude,
         lng: pos.coords.longitude
       }
+      if (this.state.rand){ // get random map within area and set the map to that
+        API.get('/api/v1/maps').then((mapData) => {
+          if (mapData.status === 200){
+            var theMap = mapData.data[Math.floor(Math.random() * mapData.data.length)];
+            this.setState({
+              currMap: theMap._id,
+              mapSelected: true,
+              latlng: corrlatlng
+            })
+          }
+        })
+      }
+      else{
+        
       this.setState({
         latlng: corrlatlng
       })
+      }
       uninitialized = false;
     }
   }
@@ -90,11 +94,17 @@ export default class Game extends Component {
           <GameMap mapId={this.state.currMap} currLoc={this.state.latlng}/> /* this doesn't like box... */
         ) : (
           <Box m={3}>
-            <h1>Select your map!</h1>
-            <MapSelect
-              ref={this.mapSelect}
-              clickHandler={this.cardClickHandler}
-            />
+            {this.state.rand ? (
+              <RollBoxLoading color="#acacac" />
+            ) : (
+              <div>
+                <h1>Select your map!</h1>
+                <MapSelect
+                  ref={this.mapSelect}
+                  clickHandler={this.cardClickHandler}
+                />
+              </div>
+            )}
           </Box>
         )}
         </Box>
