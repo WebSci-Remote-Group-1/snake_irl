@@ -18,28 +18,32 @@ import API from '@root/src/api';
 
 var timerObj
 class GameMap extends Component {
-  state = {
-    latlng: this.props.currLoc, // used for current latitude and longitude
-    ready: false, // used to display map once we're ready
-    numSegs: 8, // length of snake
-    segLen: 15, // length of snake segment in meters
-    internalSnake: [], // holds the internal snake latlng points
-    points: 0, // calculated by (lives*mod) + (distTraveled*mod) at end of game
-    lives: 3, // how many lives
-    gameOver: false, // used to display end-of-game portion
-    win: false, // bonus for winning
-    poisLeft: 10, // number of POIs left in the game
-    poiArr: [], // array containing all POIs
-    activePoi: {}, // obj holding current POI (name/lat/lng)
-    date: new Date(Date.now()), // when the game started
-    distTraveled: 0, // how long the player traveled
-    timeElapsed: 0 // in milliseconds
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      latlng: this.props.currLoc, // used for current latitude and longitude
+      ready: false, // used to display map once we're ready
+      numSegs: 8, // length of snake
+      segLen: 15, // length of snake segment in meters
+      internalSnake: [], // holds the internal snake latlng points
+      points: 0, // calculated by (lives*mod) + (distTraveled*mod) at end of game
+      lives: 3, // how many lives
+      gameOver: false, // used to display end-of-game portion
+      win: false, // bonus for winning
+      poisLeft: 10, // number of POIs left in the game
+      poiArr: [], // array containing all POIs
+      activePoi: {}, // obj holding current POI (name/lat/lng)
+      date: new Date(Date.now()), // when the game started
+      distTraveled: 0, // how long the player traveled
+      timeElapsed: 0 // in milliseconds
+    };
+    this.calcPlace = this.calcPlace.bind(this);
+  }
 
   componentDidMount() {
     var initsnake = []
     for (var i=0; i<this.state.numSegs; i++){
-      initsnake = initsnake.concat([[this.state.latlng.lat, this.state.latlng.lng]])
+      initsnake = initsnake.concat([[this.state.latlng.lat, this.state.latlng.lon]])
     }
     API.get('/api/v1/maps/' + this.props.mapId).then((mapData) => {
       this.setState({
@@ -57,7 +61,7 @@ class GameMap extends Component {
     timerObj = setTimeout(() => {
       // updates position every 0.5 seconds
       this.setState({timeElapsed: this.state.timeElapsed + 500})
-      this.calcPlace();
+      navigator.geolocation.getCurrentPosition(this.calcPlace)
     }, 500);
   };
 
@@ -85,18 +89,19 @@ class GameMap extends Component {
     API.post("/api/v1/endGame", gameDataForUpload);
   }
   
-  calcPlace() { // handles all of the messy stuff
-    var crd = this.props.coords;
+  calcPlace(pos) { // handles all of the messy stuff
+    var crd = pos.coords;
     var currLatlng = {
       lat: crd.latitude,
-      lng: crd.longitude,
+      lon: crd.longitude,
     }
+    console.log(crd);
 
     this.setState({latlng: currLatlng});
     var points = [
       {
         latitude: currLatlng.lat,
-        longitude: currLatlng.lng
+        longitude: currLatlng.lon
       },
       {
         latitude: this.state.internalSnake[0][0],
@@ -107,11 +112,11 @@ class GameMap extends Component {
     var collisionBox = {
       lat1: crd.latitude-crd.accuracy,
       lat2: crd.latitude+crd.accuracy,
-      lng1: crd.longitude-crd.accuracy,
-      lng2: crd.longitude+crd.accuracy
+      lon1: crd.longitude-crd.accuracy,
+      lon2: crd.longitude+crd.accuracy
     }
     if(this.state.activePoi.lat > collisionBox.lat1 && this.state.activePoi.lat < collisionBox.lat2){ // in lat bounds
-      if(this.state.activePoi.lng > collisionBox.lng1 && this.state.activePoi.lng < collisionBox.lng2){ // in lng bounds
+      if(this.state.activePoi.lon > collisionBox.lon1 && this.state.activePoi.lon < collisionBox.lon2){ // in lng bounds
         this.setState({
           poisLeft: this.state.poisLeft-1, // reduce poisLeft
           numSegs: this.state.numSegs+1 // increase segments
@@ -134,7 +139,7 @@ class GameMap extends Component {
       }) // nothing after this in this function requires this, and by the time calcPlace() is called again it should be done, given repeatTimer taking 500ms
       // check collision
       // references this post https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
-      var ll = [[currLatlng.lat, currLatlng.lng], [this.state.internalSnake[0][0], this.state.internalSnake[0][1]]]
+      var ll = [[currLatlng.lat, currLatlng.lon], [this.state.internalSnake[0][0], this.state.internalSnake[0][1]]]
       for (var i = 0; i < this.state.numSegs-1; i++){
         var cl = [[this.state.internalSnake[i][0], this.state.internalSnake[i][1]], [this.state.internalSnake[i+1][0], this.state.internalSnake[i+1][1]]]
         var det, gamma, lambda;
@@ -166,7 +171,7 @@ class GameMap extends Component {
       var updateSnake = this.state.internalSnake;
       for (var i = this.state.numSegs-1; i >= 0; i--){
         if (i === 0){
-          updateSnake[i] = [currLatlng.lat, currLatlng.lng];
+          updateSnake[i] = [currLatlng.lat, currLatlng.lon];
         }
         else {
           updateSnake[i] = updateSnake[i-1];
@@ -229,7 +234,7 @@ class GameMap extends Component {
                 >
                   <Popup>
                     Latitude: {this.state.latlng.lat},
-                    Longitude: {this.state.latlng.lng}
+                    Longitude: {this.state.latlng.lon}
                   </Popup>
                   <Tooltip>Snake Head</Tooltip>
                 </ReactLeafletDriftMarker>

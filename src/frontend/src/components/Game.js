@@ -23,7 +23,7 @@ export default class Game extends Component {
       rand: ((new URL(document.location)).searchParams.get("rand") == "true"),
       latlng: {
         lat: 0,
-        lng: 0
+        lon: 0
       }
     }
     console.log(this.state.rand) 
@@ -36,7 +36,7 @@ export default class Game extends Component {
       console.log("initialized!")
       var corrlatlng = {
         lat: pos.coords.latitude,
-        lng: pos.coords.longitude
+        lon: pos.coords.longitude
       }
       if (this.state.rand){ // get random map within area and set the map to that
         API.get('/api/v1/maps').then((mapData) => {
@@ -51,10 +51,9 @@ export default class Game extends Component {
         })
       }
       else{
-        
-      this.setState({
-        latlng: corrlatlng
-      })
+        this.setState({
+          latlng: corrlatlng
+        })
       }
       uninitialized = false;
     }
