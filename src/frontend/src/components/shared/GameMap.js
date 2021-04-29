@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {
+  Box,
+} from '@material-ui/core';
 import L, { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
@@ -95,7 +98,6 @@ class GameMap extends Component {
       lat: crd.latitude,
       lon: crd.longitude,
     }
-    console.log(crd);
 
     this.setState({latlng: currLatlng});
     var points = [
@@ -109,28 +111,34 @@ class GameMap extends Component {
       }
     ]
     // check poi intersection
-    var collisionBox = {
-      lat1: crd.latitude-crd.accuracy,
-      lat2: crd.latitude+crd.accuracy,
-      lon1: crd.longitude-crd.accuracy,
-      lon2: crd.longitude+crd.accuracy
-    }
-    if(this.state.activePoi.lat > collisionBox.lat1 && this.state.activePoi.lat < collisionBox.lat2){ // in lat bounds
-      if(this.state.activePoi.lon > collisionBox.lon1 && this.state.activePoi.lon < collisionBox.lon2){ // in lng bounds
-        this.setState({
-          poisLeft: this.state.poisLeft-1, // reduce poisLeft
-          numSegs: this.state.numSegs+1 // increase segments
-        }, () => {
-          if(this.state.poisLeft == 0){ // if no more POIs, we're done
-            this.setState({
-              gameOver: true,
-              win: true // make sure to tell them that they win
-            }, () => {
-              this.breakRepeat(); // break the repeat
-            })
-          }
-        })
+    var poiPoints = [
+      {
+        latitude: this.state.activePoi.lat,
+        longitude: this.state.activePoi.long
+      },
+      {
+        latitude: crd.latitude,
+        longitude: crd.longitude
       }
+    ]
+    if (HaversineGeolocation.getDistanceBetween(poiPoints[0], poiPoints[1], 'm') < crd.accuracy){
+      var updateSnake = this.state.internalSnake;
+      updateSnake.push(updateSnake[updateSnake.length - 1]);
+      this.setState({
+        poisLeft: this.state.poisLeft-1, // reduce poisLeft
+        numSegs: this.state.numSegs+1, // increase segments
+        activePoi: this.state.poiArr[Math.floor(Math.random() * this.state.poiArr.length)], // update POI
+        internalSnake: updateSnake
+      }, () => {
+        if(this.state.poisLeft == 0){ // if no more POIs, we're done
+          this.setState({
+            gameOver: true,
+            win: true // make sure to tell them that they win
+          }, () => {
+            this.breakRepeat(); // break the repeat
+          })
+        }
+      })
     }
     var m_diff = HaversineGeolocation.getDistanceBetween(points[0], points[1], 'm')
     if (m_diff >= this.state.segLen){
@@ -198,60 +206,66 @@ class GameMap extends Component {
                   <h1>You lose...</h1>
                 )
               ) : ( // game not over
-              <MapContainer center={this.state.latlng} zoom={13}>
-                <TileLayer
-                  attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                />
-                <MapConsumer>
-                  {(map) => {
-                    var firstPolyLine = new L.Polyline(this.state.internalSnake, this.snakeTrail);
-                    for (var i in map._layers){
-                      if (map._layers[i]._path != undefined){ 
-                        try {
-                          map.removeLayer(map._layers[i]);
-                        }
-                        catch(e) {
-                          console.log("problem with " + e + map._layers[i]);
+              <div>
+                <MapContainer center={this.state.latlng} zoom={13}>
+                  <TileLayer
+                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                  />
+                  <MapConsumer>
+                    {(map) => {
+                      var firstPolyLine = new L.Polyline(this.state.internalSnake, this.snakeTrail);
+                      for (var i in map._layers){
+                        if (map._layers[i]._path != undefined){ 
+                          try {
+                            map.removeLayer(map._layers[i]);
+                          }
+                          catch(e) {
+                            console.log("problem with " + e + map._layers[i]);
+                          }
                         }
                       }
+                      map.addLayer(firstPolyLine);
+                      return null;
+                    }}
+                  </MapConsumer>
+                  <ReactLeafletDriftMarker
+                    position={this.state.latlng}
+                    duration={750}
+                    keepAtCenter={true}
+                    icon={
+                      new Icon({
+                        iconUrl: DefaultMarker,
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                      })
                     }
-                    map.addLayer(firstPolyLine);
-                    return null;
-                  }}
-                </MapConsumer>
-                <ReactLeafletDriftMarker
-                  position={this.state.latlng}
-                  duration={750}
-                  keepAtCenter={true}
-                  icon={
-                    new Icon({
-                      iconUrl: DefaultMarker,
-                      iconSize: [25, 41],
-                      iconAnchor: [12, 41],
-                    })
-                  }
-                >
-                  <Popup>
-                    Latitude: {this.state.latlng.lat},
-                    Longitude: {this.state.latlng.lon}
-                  </Popup>
-                  <Tooltip>Snake Head</Tooltip>
-                </ReactLeafletDriftMarker>
-                <Marker
-                  key={this.state.activePoi.name}
-                  position={[this.state.activePoi.lat, this.state.activePoi.long]}
-                  icon={
-                    new Icon({
-                      iconUrl: DefaultMarker,
-                      iconSize: [25, 41],
-                      iconAnchor: [12, 41],
-                    })
-                  }
-                >
-                  <Popup>{this.state.activePoi.name}</Popup>
-                </Marker>
-              </MapContainer>
+                  >
+                    <Popup>
+                      Latitude: {this.state.latlng.lat},
+                      Longitude: {this.state.latlng.lon}
+                    </Popup>
+                    <Tooltip>Snake Head</Tooltip>
+                  </ReactLeafletDriftMarker>
+                  <Marker
+                    key={this.state.activePoi.name}
+                    position={[this.state.activePoi.lat, this.state.activePoi.long]}
+                    icon={
+                      new Icon({
+                        iconUrl: DefaultMarker,
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                      })
+                    }
+                  >
+                    <Popup>{this.state.activePoi.name}</Popup>
+                  </Marker>
+                </MapContainer>
+                <Box m={3}>
+                  <h1>LIVES: {this.state.lives}</h1>
+                  <h1>POIs LEFT: {this.state.poisLeft}</h1>
+                </Box>
+              </div>
               )
             ) : (
               <RollBoxLoading color="#acacac" />
