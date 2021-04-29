@@ -20,10 +20,15 @@ export default class Game extends Component {
       intervalId: 0,
       currMap: "",
       mapSelected: false,
-      rand: ((new URL(document.location)).searchParams.get("rand") == "true")
+      rand: ((new URL(document.location)).searchParams.get("rand") == "true"),
+      latlng: {
+        lat: 0,
+        lng: 0
+      }
     }
     console.log(this.state.rand) 
     this.cardClickHandler = this.cardClickHandler.bind(this);
+    this.success = this.success.bind(this);
     if (this.state.rand){ // get random map within area and set the map to that
       API.get('/api/v1/maps').then((mapData) => {
         if (mapData.status === 200){
@@ -40,6 +45,13 @@ export default class Game extends Component {
   success(pos) {
     if(uninitialized){
       console.log("initialized!")
+      var corrlatlng = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
+      }
+      this.setState({
+        latlng: corrlatlng
+      })
       uninitialized = false;
     }
   }
@@ -75,7 +87,7 @@ export default class Game extends Component {
         <Header/>
         <Box>
         {this.state.mapSelected ? (
-          <GameMap mapId={this.state.currMap}/> /* this doesn't like box... */
+          <GameMap mapId={this.state.currMap} currLoc={this.state.latlng}/> /* this doesn't like box... */
         ) : (
           <Box m={3}>
             <h1>Select your map!</h1>
