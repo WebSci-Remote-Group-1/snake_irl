@@ -7,6 +7,7 @@ import Media from 'react-media'; // add Media
 
 import { ThemeProvider } from '@material-ui/core/styles';
 import snake_irl_theme from '@components/shared/material-theme-overrides';
+import Leaderboard from '@components/Leaderboard';
 
 import '@assets/style/master.scss';
 import Game from './components/Game';
@@ -24,7 +25,8 @@ function App() {
                     {' '}
                     {/* Mobile Routing */}
                     <Route exact path="/" component={MobileIndex} />
-                    <Route path="/play" component={Game} />
+					<Route path="/play" component={Game} />
+					<Route path="/leaderboard" component={Leaderboard} />
                   </Switch>
                 ) : (
                   <Switch>
@@ -33,6 +35,7 @@ function App() {
                     <Route exact path="/" component={Index} />
                     <Route path="/create" component={Create} />
                     <Route path="/admin" component={Admin} />
+					<Route path="/leaderboard" component={Leaderboard} />
                   </Switch>
                 )
               }

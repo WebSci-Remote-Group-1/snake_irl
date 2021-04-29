@@ -260,7 +260,7 @@ app.get(api_path + '/maps/:id?', (req, res) => {
 app.get(api_path + '/data/:datatype', (req, res) => {
   switch (req.params.datatype) {
     case 'players': {
-      let mongoOptions = { projection: { _id: 0 } }; // Projection for mongo's find
+      let mongoOptions = { projection: { _id: 0, username: 0, socialMedia: 0, maps: 0, password: 0 } }; // Projection for mongo's find
       req.query.filters
         ? req.query.filters
             .split(',')
@@ -286,6 +286,12 @@ app.get(api_path + '/data/:datatype', (req, res) => {
       break;
     }
   }
+});
+
+app.get(api_path + '/ranks', (req, res) => {
+	MGDB_PlayerInterface.fetchLeaderboard(null)
+		.then(resp => res.json(resp))
+		.catch(err => res.status(500).json(err));
 });
 
 /* Add game data to the database

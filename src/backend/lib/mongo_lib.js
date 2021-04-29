@@ -53,16 +53,19 @@ const findOne = (mongoURI, collectionName, query, filter) =>
       });
   });
 
-const find = (mongoURI, collectionName, query, filter) =>
+const find = (mongoURI, collectionName, query, filter, sort = null, limit = 0) =>
   new Promise((resolve, reject) => {
     fetchMongoConnection(mongoURI)
       .then((connection) => {
         // Fetch data from DB
         mongoClient = connection;
-        return connection
+        return sort === null ? connection
           .db('snake_irl')
           .collection(collectionName)
-          .find(query, filter);
+          .find(query, filter).limit(limit) : connection
+          .db('snake_irl')
+          .collection(collectionName)
+          .find(query, filter).sort(sort).limit(limit);
       })
       .then((results) => {
         // Parse and handle results of db lookup
