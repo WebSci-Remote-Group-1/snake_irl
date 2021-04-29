@@ -18,13 +18,8 @@ import API from '@root/src/api';
 
 var timerObj
 class GameMap extends Component {
-  mapCenter = {
-    lat: 0,
-    lng: 0
-  };
-
   state = {
-    latlng: this.mapCenter, // used for current latitude and longitude
+    latlng: this.props.currLoc, // used for current latitude and longitude
     ready: false, // used to display map once we're ready
     numSegs: 8, // length of snake
     segLen: 15, // length of snake segment in meters
@@ -44,7 +39,7 @@ class GameMap extends Component {
   componentDidMount() {
     var initsnake = []
     for (var i=0; i<this.state.numSegs; i++){
-      initsnake = initsnake.concat([[this.mapCenter.lat, this.mapCenter.lng]])
+      initsnake = initsnake.concat([[this.state.latlng.lat, this.state.latlng.lng]])
     }
     API.get('/api/v1/maps/' + this.props.mapId).then((mapData) => {
       this.setState({
@@ -108,13 +103,6 @@ class GameMap extends Component {
         longitude: this.state.internalSnake[0][1]
       }
     ]
-    if (this.state.internalSnake[0] == [0, 0]){ // catch init
-      var updateSnake = this.state.internalSnake;
-      updateSnake[0] = [currLatlng.lat, currLatlng.lng];
-      this.setState({
-        internalSnake: updateSnake
-      },this.repeat())
-    }
     // check poi intersection
     var collisionBox = {
       lat1: crd.latitude-crd.accuracy,
@@ -205,7 +193,7 @@ class GameMap extends Component {
                   <h1>You lose...</h1>
                 )
               ) : ( // game not over
-              <MapContainer center={this.mapCenter} zoom={13}>
+              <MapContainer center={this.state.latlng} zoom={13}>
                 <TileLayer
                   attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
