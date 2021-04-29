@@ -19,8 +19,8 @@ import API from '@root/src/api';
 var timerObj
 class GameMap extends Component {
   mapCenter = {
-    lat: 42.72983440371727,
-    lng: -73.68997137045602
+    lat: 0,
+    lng: 0
   };
 
   state = {
@@ -108,6 +108,13 @@ class GameMap extends Component {
         longitude: this.state.internalSnake[0][1]
       }
     ]
+    if (this.state.internalSnake[0] == [0, 0]){ // catch init
+      var updateSnake = this.state.internalSnake;
+      updateSnake[0] = [currLatlng.lat, currLatlng.lng];
+      this.setState({
+        internalSnake: updateSnake
+      },this.repeat())
+    }
     // check poi intersection
     var collisionBox = {
       lat1: crd.latitude-crd.accuracy,
@@ -118,7 +125,8 @@ class GameMap extends Component {
     if(this.state.activePoi.lat > collisionBox.lat1 && this.state.activePoi.lat < collisionBox.lat2){ // in lat bounds
       if(this.state.activePoi.lng > collisionBox.lng1 && this.state.activePoi.lng < collisionBox.lng2){ // in lng bounds
         this.setState({
-          poisLeft: this.state.poisLeft-1 // reduce poisLeft
+          poisLeft: this.state.poisLeft-1, // reduce poisLeft
+          numSegs: this.state.numSegs+1 // increase segments
         }, () => {
           if(this.state.poisLeft == 0){ // if no more POIs, we're done
             this.setState({
