@@ -15,6 +15,7 @@ require('dotenv').config();
 // Homebrew imports
 const MGDB_PlayerInterface = require('./lib/player_lib');
 const MGDB_MapInterface = require('./lib/map_lib');
+const MGDB_GameInterface = require('./lib/game_lib');
 const VisualizationUtil = require('./lib/visualization_lib');
 
 // Globals
@@ -99,23 +100,25 @@ app.post(internal_path + '/logout', (req, res) => {
   console.log(`Logging out`);
   res.clearCookie('auth');
   res.json({});
-})
+});
 
 // Fetch user
 app.get(internal_path + '/getActiveUser', (req, res) => {
-  const {auth} = req.cookies;
+  const { auth } = req.cookies;
   if (!auth) {
     res.json({});
     return;
   }
-  MGDB_PlayerInterface.fetchUserByAuth(auth).then(user => {
-    console.log(user);
-    res.json(user);
-  }).catch(err => {
-    console.log(err);
-    res.json({});
-  });
-})
+  MGDB_PlayerInterface.fetchUserByAuth(auth)
+    .then((user) => {
+      console.log(user);
+      res.json(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({});
+    });
+});
 
 /* Register a new user
  *
@@ -160,7 +163,7 @@ app.post(internal_path + '/register', (req, res) => {
 
   if (req.body.demographics.age < 13) {
     res.status(400).json({
-      error: "You must be 13 years or older to play!",
+      error: 'You must be 13 years or older to play!',
     });
     return;
   }
@@ -317,6 +320,62 @@ app.get(api_path + '/data/:datatype', (req, res) => {
       break;
     }
   }
+});
+
+/* Add game data to the database
+ *
+ * Attempt to upload a game data object to database
+ *
+ * Upon successful upload, the database gains the object sent at the end of a
+ * game.
+ *
+ * This requires a JSON body object of the form:
+ *  {
+ *    points: <number of points>,
+ *    date: <date object>
+ *    map: ID of the map that was played
+ *  }
+ *
+ * This endpoint also uses the auth cookie to verify that the user is logged in.
+ */
+app.post(api_path + '/endGame', (req, res) => {
+  if (
+    req.body.points === null ||
+    req.body.points === undefined ||
+    req.body.date === null ||
+    req.body.date === undefined ||
+    req.body.map === null ||
+    req.body.map === undefined
+  ) {
+    res.status(400).json({
+      error: 'You are missing a required field',
+    });
+    return;
+  }
+  if (req.cookies.auth === null || req.cookies.auth === undefined) {
+    res.status(401).json({
+      error: 'No auth cookie!',
+    });
+  }
+  var gameObj = {
+    user: req.cooies.auth,
+    points: req.body.points,
+    date: req.body.date,
+    map: req.body.map,
+  };
+  var timeUpdateObj = {
+    username: req.cookies.auth,
+    time: req.body.elapsed,
+  };
+  MGDB_GameInterface.createGame(gameObj).then((resp) => {
+    resp
+      ? MGDB_PlayerInterface.updateUserTime(timeUpdateObj).then((resp) => {
+          resp
+            ? res.json({ message: 'Game posted' })
+            : res.status(500).json({ error: 'Could not update time ' });
+        })
+      : res.status(500).json({ error: 'Could not insert game' });
+  });
 });
 
 if (process.env.NODE_ENV == 'production') {
