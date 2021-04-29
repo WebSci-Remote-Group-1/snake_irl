@@ -31,4 +31,5 @@ const fetchMap = (mapID, filter = null) =>
 const fetchMaps = (query = null, filter = null) =>
   MGDB_Core.find(mongoURI, 'maps', query, filter);
 
-module.exports = { createMap, fetchMap, fetchMaps };
+const fetchMapsFromArray = maps => MGDB_Core.find(mongoURI, 'maps', {_id: {$in: maps}});
+module.exports = { createMap, fetchMap, fetchMaps, fetchMapsFromArray };

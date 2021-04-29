@@ -185,6 +185,40 @@ app.post(internal_path + '/register', (req, res) => {
   });
 });
 
+// Get user's maps
+app.get(internal_path + '/getActiveUserMaps', (req, res) => {
+  console.log("Getting maps");
+  const {auth} = req.cookies;
+  if (!auth) {
+    res.json([]);
+    return;
+  }
+  MGDB_PlayerInterface.fetchUserByAuth(auth).then(user => {
+    console.log("User:");
+    console.log(user);
+    if (user && user.maps && user.maps.createdMaps) {
+      // MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).toArray((err, maps) => {
+      //   console.log(err);
+      //   if(err) {
+      //     res.json([]);
+      //     return;
+      //   }
+      //   console.log(maps);
+      //   res.json(maps);
+      // })
+      MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).then(maps => {
+        console.log(maps);
+        res.json(maps);
+      })
+    } else {
+      res.json([]);
+    }
+  }).catch(err => {
+    console.log(err);
+    res.json([]);
+  });
+})
+
 /*
  * =======================================
  * API Endpoints
