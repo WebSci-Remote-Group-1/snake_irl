@@ -9,7 +9,7 @@
   "scripts": {
     "heroku-prebuild": "cd src && yarn install",
     "start": "cd src/backend && npm start",
-    "dev-start": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm start\"",
+    "dev-start": "concurrently \"cd src/frontend && npm start\" \"cd src/backend && npm run dev-start\"",
     "dev-install": "npm install yarn && yarn install && cd src/frontend && yarn install && cd ../backend && yarn install",
     "heroku-postbuild": "cd src/backend && npm run build"
   },
