@@ -12,6 +12,9 @@ const MGDB_Core = require('./mongo_lib');
 // Globals
 const mongoURI = MGDB_Core.constructProperMongoURI('MGDB_PLAYERMANAGER');
 
+// MGDB Object
+const ObjectID = require('mongodb').ObjectID;
+
 /*
  * =======================================
  * Functions
@@ -89,26 +92,38 @@ const userLogin = (username) =>
 
 const updateUserTime = (updateTimeObj) =>
   new Promise((resolve, reject) => {
-    fetchUser(updateTimeObj.username)
-      .then((resp) => {
-        resp === null || resp === undefined || resp.length === 0
-          ? reject("No such user")
-          : () => {
-            oldTime = resp.totalPlaytime
-            newTime = oldTime + updateTimeObj.time
+    fetchUser(updateTimeObj.username).then((resp) => {
+      resp === null || resp === undefined || resp.length === 0
+        ? reject('No such user')
+        : () => {
+            oldTime = resp.totalPlaytime;
+            newTime = oldTime + updateTimeObj.time;
             MGDB_Core.updateOne(
               mongoURI,
               config.get('database.player_accounts'),
               { username: updateTimeObj.username },
               { $set: { totalPlaytime: newTime } }
             )
-            .then((resp) => resolve(resp))
-            .catch((err) => {
-              console.error(err);
-              reject(err);
-            })
-          }
-      })
-  })
+              .then((resp) => resolve(resp))
+              .catch((err) => {
+                console.error(err);
+                reject(err);
+              });
+          };
+    });
+  });
 
-module.exports = { createUser, fetchUser, fetchUsers, userExists, userLogin, updateUserTime };
+const fetchUserByAuth = (auth) =>
+  MGDB_Core.findOne(mongoURI, config.get('database.player_accounts'), {
+    _id: new ObjectID(auth),
+  });
+
+module.exports = {
+  createUser,
+  fetchUser,
+  fetchUsers,
+  userExists,
+  userLogin,
+  fetchUserByAuth,
+  updateUserTime,
+};
