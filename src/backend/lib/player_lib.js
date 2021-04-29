@@ -12,6 +12,9 @@ const MGDB_Core = require('./mongo_lib');
 // Globals
 const mongoURI = MGDB_Core.constructProperMongoURI('MGDB_PLAYERMANAGER');
 
+// MGDB Object
+const ObjectID  = require('mongodb').ObjectID;
+
 /*
  * =======================================
  * Functions
@@ -87,4 +90,6 @@ const userLogin = (username) =>
       });
   });
 
-module.exports = { createUser, fetchUser, fetchUsers, userExists, userLogin };
+const fetchUserByAuth = auth => MGDB_Core.findOne(mongoURI, config.get('database.player_accounts'), {_id: new ObjectID(auth)});
+
+module.exports = { createUser, fetchUser, fetchUsers, userExists, userLogin, fetchUserByAuth };

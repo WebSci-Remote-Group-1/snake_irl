@@ -94,6 +94,29 @@ app.post(internal_path + '/login', (req, res) => {
   });
 });
 
+// Logout
+app.post(internal_path + '/logout', (req, res) => {
+  console.log(`Logging out`);
+  res.clearCookie('auth');
+  res.json({});
+})
+
+// Fetch user
+app.get(internal_path + '/getActiveUser', (req, res) => {
+  const {auth} = req.cookies;
+  if (!auth) {
+    res.json({});
+    return;
+  }
+  MGDB_PlayerInterface.fetchUserByAuth(auth).then(user => {
+    console.log(user);
+    res.json(user);
+  }).catch(err => {
+    console.log(err);
+    res.json({});
+  });
+})
+
 /* Register a new user
  *
  * Note that this endpoint does not set a user auth cookie, users will need to
@@ -131,6 +154,13 @@ app.post(internal_path + '/register', (req, res) => {
   ) {
     res.status(400).json({
       error: 'You are missing a required field',
+    });
+    return;
+  }
+
+  if (req.body.demographics.age < 13) {
+    res.status(400).json({
+      error: "You must be 13 years or older to play!",
     });
     return;
   }
