@@ -150,30 +150,15 @@ export default function Header(props) {
       </List>
       <Divider />
       <Typography className={classes.sidebarHeader} variant="h4">
-        Leaderboard
+        Social
       </Typography>
       <List>
         <ListItemLink
           icon={<FormatListNumberedIcon />}
-          primary="All Time"
-          to="#"
+          primary="Leaderboard"
+			  to="/leaderboard"
         />
-        <ListItemLink
-          icon={<FormatListNumberedIcon />}
-          primary="Monthly"
-          to="#"
-        />
-        <ListItemLink
-          icon={<FormatListNumberedIcon />}
-          primary="Weekly"
-          to="#"
-        />
-        <ListItemLink
-          icon={<FormatListNumberedIcon />}
-          primary="Daily"
-          to="#"
-        />
-      </List>
+              </List>
 
       <Typography className={classes.sidebarHeader} variant="h4">
         Admin
@@ -218,30 +203,15 @@ export default function Header(props) {
       </List>
       <Divider />
       <Typography className={classes.sidebarHeader} variant="h4">
-        Leaderboard
+        Social
       </Typography>
       <List>
         <ListItemLink
           icon={<FormatListNumberedIcon />}
-          primary="All Time"
-          to="#"
+          primary="Leaderboard"
+			  to="/leaderboard"
         />
-        <ListItemLink
-          icon={<FormatListNumberedIcon />}
-          primary="Monthly"
-          to="#"
-        />
-        <ListItemLink
-          icon={<FormatListNumberedIcon />}
-          primary="Weekly"
-          to="#"
-        />
-        <ListItemLink
-          icon={<FormatListNumberedIcon />}
-          primary="Daily"
-          to="#"
-        />
-      </List>
+              </List>
     </div>
   );
 
