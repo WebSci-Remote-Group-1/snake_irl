@@ -2,6 +2,7 @@ import Create from '@components/Create';
 import Index from '@components/DesktopIndex';
 import { Admin } from '@components/Admin';
 import MobileIndex from '@components/MobileIndex';
+import Profile from '@components/Profile';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Media from 'react-media'; // add Media
 
@@ -25,6 +26,7 @@ function App() {
                     {/* Mobile Routing */}
                     <Route exact path="/" component={MobileIndex} />
                     <Route path="/play" component={Game} />
+                    <Route exact path="/profiles/:id" component={Profile} />
                   </Switch>
                 ) : (
                   <Switch>
@@ -33,6 +35,7 @@ function App() {
                     <Route exact path="/" component={Index} />
                     <Route path="/create" component={Create} />
                     <Route path="/admin" component={Admin} />
+                    <Route exact path="/profiles/:id" component={Profile} />
                   </Switch>
                 )
               }

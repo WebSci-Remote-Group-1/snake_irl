@@ -5,7 +5,6 @@
     "internal_api_path": "/server"
   },
   "database": {
-    "player_accounts": "player_accounts",
-    "played_games": "played_games"
+    "player_accounts": "player_accounts"
   }
 }
