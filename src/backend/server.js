@@ -288,8 +288,17 @@ app.post(internal_path + '/createMap', (req, res) => {
     pointsOfInterest,
   };
   MGDB_MapInterface.createMap(mapDetails).then(result => {
-    // console.log(result);
-    res.json({message: "Success"});
+    console.log(result);
+    (async () => {
+      const user = await MGDB_PlayerInterface.fetchUserByAuth(new ObjectID(auth));
+      const allMapsForThisUser = await MGDB_MapInterface.fetchMapsFromAuth(new ObjectID(auth));
+      const mapsAlreadyInCreatedMapsArray = new Set(user.maps.createdMaps);
+      const mapsToAdd = allMapsForThisUser.filter(map => !mapsAlreadyInCreatedMapsArray.has(map._id));
+      // console.log("adding maps");
+      // console.log(mapsToAdd);
+      await Promise.all(mapsToAdd.map(map => MGDB_PlayerInterface.addMapToUser(new ObjectID(auth), map._id)));
+      res.json({message: "Success"});
+    })();
   })
 })
 
@@ -347,7 +356,11 @@ app.post(internal_path + '/deleteMap', (req, res) => {
     return;
   }
   const {mapID} = req.body;
-  MGDB_MapInterface.deleteMap(new ObjectID(mapID), new ObjectID(auth)).then(result => {
+
+  Promise.all([
+    MGDB_MapInterface.deleteMap(new ObjectID(mapID), new ObjectID(auth)),
+    MGDB_PlayerInterface.removeMapFromUser(new ObjectID(auth), new ObjectID(mapID)),
+  ]).then(result => {
     // console.log(result);
     res.json({message: "Success"});
   }).catch(err => {
