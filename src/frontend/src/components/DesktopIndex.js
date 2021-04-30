@@ -48,11 +48,6 @@ const Index = () => (
         <Typography variant="h2">
           Happy snaking!
         </Typography>
-        <p>&nbsp;</p>
-        <Typography variant="h3">
-          TODAY'S TOP SNAKER:
-        </Typography>
-        <Typography variant="h4">John Stamos</Typography>
       </Box>
     </Container>
   </div>
