@@ -367,6 +367,7 @@ class UserManager extends Component {
     API.post('/server/logout').then(() => {
       console.log("Logged out");
       this.updateActiveUser();
+      window.location.assign('/');
     })
     this.handleClose();
   }
