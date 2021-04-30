@@ -196,30 +196,139 @@ app.get(internal_path + '/getActiveUserMaps', (req, res) => {
     res.json([]);
     return;
   }
-  MGDB_PlayerInterface.fetchUserByAuth(auth).then(user => {
-    console.log("User:");
-    console.log(user);
-    if (user && user.maps && user.maps.createdMaps) {
-      // MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).toArray((err, maps) => {
-      //   console.log(err);
-      //   if(err) {
-      //     res.json([]);
-      //     return;
-      //   }
-      //   console.log(maps);
-      //   res.json(maps);
-      // })
-      MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).then(maps => {
-        console.log(maps);
-        res.json(maps);
-      })
-    } else {
-      res.json([]);
+  MGDB_MapInterface.fetchMapsFromAuth(new ObjectID(auth)).then(maps => {
+    res.json(maps);
+  }).catch(err => {
+    res.json([]);
+  })
+  // MGDB_PlayerInterface.fetchUserByAuth(auth).then(user => {
+  //   console.log("User:");
+  //   console.log(user);
+  //   if (user && user.maps && user.maps.createdMaps) {
+  //     // MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).toArray((err, maps) => {
+  //     //   console.log(err);
+  //     //   if(err) {
+  //     //     res.json([]);
+  //     //     return;
+  //     //   }
+  //     //   console.log(maps);
+  //     //   res.json(maps);
+  //     // })
+  //     MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).then(maps => {
+  //       console.log(maps);
+  //       res.json(maps);
+  //     })
+  //   } else {
+  //     res.json([]);
+  //   }
+  // }).catch(err => {
+  //   console.log(err);
+  //   res.json([]);
+  // });
+})
+
+// Create map
+app.post(internal_path + '/createMap', (req, res) => {
+  console.log("attempting to create map");
+  const {auth} = req.cookies;
+  if (!auth) {
+    res.json({});
+    return;
+  }
+  const {title, description} = req.body;
+  if (!title || !description) {
+    res.json({});
+    return;
+  }
+  let {pointsOfInterest} = req.body;
+  if (!Array.isArray(pointsOfInterest)) pointsOfInterest = [];
+  pointsOfInterest = pointsOfInterest.map(poi => {
+    if (!poi instanceof Object) {
+      return null;
     }
+    if (!poi.name || isNaN(poi.lat) || isNaN(poi.long)) {
+      return null;
+    }
+    return {
+      name: poi.name,
+      lat: Number(poi.lat),
+      long: Number(poi.long),
+    };
+  }).filter(poi => poi);
+  const mapDetails = {
+    title,
+    description,
+    mapOwner: new ObjectID(auth),
+    top: null,
+    pointsOfInterest,
+  };
+  MGDB_MapInterface.createMap(mapDetails).then(result => {
+    console.log(result);
+    res.json({message: "Success"});
+  })
+})
+
+// Update map
+app.post(internal_path + '/updateMap', (req, res) => {
+  console.log("attempting to update map");
+  const {auth} = req.cookies;
+  if (!auth) {
+    res.json({});
+    return;
+  }
+  const {title, description, _id} = req.body;
+  if (!title || !description) {
+    res.json({});
+    return;
+  }
+  let {pointsOfInterest} = req.body;
+  if (!Array.isArray(pointsOfInterest)) pointsOfInterest = [];
+  pointsOfInterest = pointsOfInterest.map(poi => {
+    if (!poi instanceof Object) {
+      return null;
+    }
+    if (!poi.name || isNaN(poi.lat) || isNaN(poi.long)) {
+      return null;
+    }
+    return {
+      name: poi.name,
+      lat: Number(poi.lat),
+      long: Number(poi.long),
+    };
+  }).filter(poi => poi);
+  const mapDetails = {
+    title,
+    description,
+    // mapOwner: new ObjectID(auth),
+    // top: null,
+    pointsOfInterest,
+  };
+  console.log(mapDetails);
+  MGDB_MapInterface.updateMap(new ObjectID(_id), new ObjectID(auth), mapDetails).then(result => {
+    console.log(result);
+    res.json({message: "Success"});
   }).catch(err => {
     console.log(err);
-    res.json([]);
-  });
+    res.json({});
+  })
+})
+
+// Delete map
+app.post(internal_path + '/deleteMap', (req, res) => {
+  console.log("Attempting to delete map");
+  const {auth} = req.cookies;
+  if (!auth) {
+    res.json({});
+    return;
+  }
+  const {mapID} = req.body;
+  MGDB_MapInterface.deleteMap(new ObjectID(mapID), new ObjectID(auth)).then(result => {
+    console.log(result);
+    res.json({message: "Success"});
+  }).catch(err => {
+    console.log(err);
+    res.json({});
+  })
 })
 
 /*

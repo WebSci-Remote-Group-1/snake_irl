@@ -34,20 +34,29 @@ class MapDisplay extends Component {
   }
 
   async componentDidMount() {
-    let mapData = await API.get(`/api/v1/maps/${this.state.mapID}`);
-    mapData = mapData.data;
+    let mapData;
+    if (this.props.mapData) {
+      mapData = this.props.mapData;
+    }  else {
+      mapData = await API.get(`/api/v1/maps/${this.state.mapID}`);
+      mapData = mapData.data;
+    }
     this.setState({ loading: false, mapObj: mapData });
-    let mapCenter = [0, 0];
-    this.state.mapObj.pointsOfInterest.map((point) => {
-      mapCenter[0] += point.lat;
-      mapCenter[1] += point.long;
+    if (mapData.pointsOfInterest.length) {
+      let mapCenter = [0, 0];
+      mapData.pointsOfInterest.map((point) => {
+        mapCenter[0] += point.lat;
+        mapCenter[1] += point.long;
 
-      return null;
-    });
-    mapCenter[0] /= this.state.mapObj.pointsOfInterest.length;
-    mapCenter[1] /= this.state.mapObj.pointsOfInterest.length;
+        return null;
+      });
+      mapCenter[0] /= mapData.pointsOfInterest.length;
+      mapCenter[1] /= mapData.pointsOfInterest.length;
 
-    this.setState({ mapCenter: mapCenter });
+      this.setState({ mapCenter: mapCenter });
+    } else if (this.props.defaultMapCenter) {
+      this.setState({ mapCenter: this.props.defaultMapCenter });
+    }
   }
 
   render() {

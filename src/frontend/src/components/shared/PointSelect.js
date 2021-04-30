@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import Header from './shared/header.js';
-import PageBody from './shared/pagebody.js';
-import { Button, Card, Typography, TextField, Toolbar, Grid, FormControl, InputLabel, Select, MenuItem, Menu, IconButton } from '@material-ui/core';
+// import Header from './shared/header.js';
+// import PageBody from './shared/pagebody.js';
+import { Box, Button, Card, Typography, TextField, Toolbar, Grid, FormControl, InputLabel, Select, MenuItem, Menu, IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles'
 import axios from 'axios';
 import EditIcon from '@material-ui/icons/Edit';
@@ -24,6 +24,9 @@ import {
   Popup,
   MapConsumer,
 } from 'react-leaflet';
+import DefaultMarker from '@assets/img/mapPinDefault.svg';
+import PurpleMarker from '@assets/img/mapPinPurple.svg';
+import { cloneDeep, isEqual } from 'lodash';
 
 delete Leaflet.Icon.Default.prototype._getIconUrl;
 
@@ -35,36 +38,67 @@ Leaflet.Icon.Default.mergeOptions({
 
 // WIP component
 
-class MapSelect extends Component {
+class PointSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedPoint: {
-        lat: 42.72983440371727, 
-        long: -73.68997137045602
-      }
+      selectedPoint: props.defaultPoint,
     }
   }
 
+  onPointSelected(lat, long) {
+    const {onPointSelect} = this.props;
+    const selectedPoint = {lat, long};
+    // THIS SHOULD NOT BE NECESSARY. LEAFLET BAD
+    if (isEqual(selectedPoint, this.lastSelectedPoint)) return;
+    this.lastSelectedPoint = selectedPoint;
+
+    console.log(`Point at ${lat}, ${long}`);
+    onPointSelect(lat, long);
+    this.setState({selectedPoint});
+  }
+
   render() {
+    const {otherPoints, defaultCenter, defaultZoom} = this.props;
     const {selectedPoint} = this.state;
+    const mapCenter = defaultCenter || [42.72983440371727, -73.68997137045602];
     return (
-      <Box width="50%" minWidth="200px" height="100%" minHeight="200px">
-        <MapContainer center={[selectedPoint.lat, selectedPoint.long]} zoom={16}>
+      <Box width="50%" minWidth="200px" height="100%" minHeight="300px">
+        <MapContainer 
+          center={mapCenter} 
+          zoom={defaultZoom || 12}
+          onClick={e => console.log(e)}
+        >
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
           />
           <MapConsumer>
             {(map) => {
+              map.on("click", event => {
+                const {lat, lng} = event.latlng;
+                this.onPointSelected(lat, lng);
+              })
               // map.flyTo({
-              //   lat: this.state.mapCenter[0],
-              //   lng: this.state.mapCenter[1],
+              //   lat: mapCenter[0],
+              //   lng: mapCenter[1],
               // });
               return null;
             }}
           </MapConsumer>
-          {/* {this.state.mapObj.pointsOfInterest.map((poi) => {
+          <Marker 
+            key={"Selected Point"}
+            position={[selectedPoint.lat, selectedPoint.long]}
+            icon={
+              new Icon({
+                iconUrl: PurpleMarker,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+              })
+            }
+            style={{color: "purple", backgroundColor: "purple"}}
+          />
+          {otherPoints.map((poi) => {
             return (
               <Marker
                 key={poi.name}
@@ -80,9 +114,11 @@ class MapSelect extends Component {
                 <Popup>{poi.name}</Popup>
               </Marker>
             );
-          })} */}
+          })}
         </MapContainer>
       </Box>
     );
   }
 }
+
+export default PointSelect;

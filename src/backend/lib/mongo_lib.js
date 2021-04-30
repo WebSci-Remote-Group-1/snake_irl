@@ -115,6 +115,27 @@ const insertOne = (mongoURI, collectionName, insertDoc, options = {}) =>
       });
   });
 
+const deleteOne = (mongoURI, collectionName, filter, options = {}) =>
+  new Promise((resolve, reject) => {
+    fetchMongoConnection(mongoURI)
+      .then((connection) => {
+        mongoClient = connection;
+        return mongoClient
+          .db('snake_irl')
+          .collection(collectionName)
+          .deleteOne(filter, options);
+      })
+      .then((response) => {
+        mongoClient.close();
+        response
+          ? resolve({ status: 0, message: 'Delete operation completed' })
+          : reject({
+              status: -1,
+              message: 'ERROR: Could not delete',
+            });
+      });
+  });
+
 module.exports = {
   constructProperMongoURI,
   fetchMongoConnection,
@@ -122,4 +143,5 @@ module.exports = {
   find,
   updateOne,
   insertOne,
+  deleteOne,
 };
