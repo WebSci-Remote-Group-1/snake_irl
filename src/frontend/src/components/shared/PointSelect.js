@@ -36,8 +36,6 @@ Leaflet.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-// WIP component
-
 class PointSelect extends Component {
   constructor(props) {
     super(props);
@@ -79,10 +77,6 @@ class PointSelect extends Component {
                 const {lat, lng} = event.latlng;
                 this.onPointSelected(lat, lng);
               })
-              // map.flyTo({
-              //   lat: mapCenter[0],
-              //   lng: mapCenter[1],
-              // });
               return null;
             }}
           </MapConsumer>

@@ -111,7 +111,7 @@ app.get(internal_path + '/getActiveUser', (req, res) => {
   }
   MGDB_PlayerInterface.fetchUserByAuth(auth)
     .then((user) => {
-      console.log(user);
+      // console.log(user);
       res.json(user);
     })
     .catch((err) => {
@@ -201,30 +201,6 @@ app.get(internal_path + '/getActiveUserMaps', (req, res) => {
   }).catch(err => {
     res.json([]);
   })
-  // MGDB_PlayerInterface.fetchUserByAuth(auth).then(user => {
-  //   console.log("User:");
-  //   console.log(user);
-  //   if (user && user.maps && user.maps.createdMaps) {
-  //     // MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).toArray((err, maps) => {
-  //     //   console.log(err);
-  //     //   if(err) {
-  //     //     res.json([]);
-  //     //     return;
-  //     //   }
-  //     //   console.log(maps);
-  //     //   res.json(maps);
-  //     // })
-  //     MGDB_MapInterface.fetchMapsFromArray(user.maps.createdMaps).then(maps => {
-  //       console.log(maps);
-  //       res.json(maps);
-  //     })
-  //   } else {
-  //     res.json([]);
-  //   }
-  // }).catch(err => {
-  //   console.log(err);
-  //   res.json([]);
-  // });
 })
 
 // Create map
@@ -263,7 +239,7 @@ app.post(internal_path + '/createMap', (req, res) => {
     pointsOfInterest,
   };
   MGDB_MapInterface.createMap(mapDetails).then(result => {
-    console.log(result);
+    // console.log(result);
     res.json({message: "Success"});
   })
 })
@@ -303,9 +279,9 @@ app.post(internal_path + '/updateMap', (req, res) => {
     // top: null,
     pointsOfInterest,
   };
-  console.log(mapDetails);
+  // console.log(mapDetails);
   MGDB_MapInterface.updateMap(new ObjectID(_id), new ObjectID(auth), mapDetails).then(result => {
-    console.log(result);
+    // console.log(result);
     res.json({message: "Success"});
   }).catch(err => {
     console.log(err);
@@ -323,7 +299,7 @@ app.post(internal_path + '/deleteMap', (req, res) => {
   }
   const {mapID} = req.body;
   MGDB_MapInterface.deleteMap(new ObjectID(mapID), new ObjectID(auth)).then(result => {
-    console.log(result);
+    // console.log(result);
     res.json({message: "Success"});
   }).catch(err => {
     console.log(err);
