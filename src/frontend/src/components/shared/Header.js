@@ -156,18 +156,7 @@ export default function Header(props) {
         <ListItemLink
           icon={<FormatListNumberedIcon />}
           primary="Leaderboard"
-			  to="/leaderboard"
-        />
-              </List>
-
-      <Typography className={classes.sidebarHeader} variant="h4">
-        Admin
-      </Typography>
-      <List>
-        <ListItemLink
-          icon={<SupervisorAccountIcon />}
-          primary="Admin"
-          to="/admin"
+  			  to="/leaderboard"
         />
       </List>
     </div>

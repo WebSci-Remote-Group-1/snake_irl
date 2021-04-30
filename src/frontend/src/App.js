@@ -38,7 +38,6 @@ function App() {
                     {/* Desktop Routing */}
                     <Route exact path="/" component={Index} />
                     <Route path="/create" component={Create} />
-                    <Route path="/admin" component={Admin} />
                     <Route exact path="/profiles/:id" component={Profile} />
                     <Route exact path="/account" component={Account} />
 					          <Route path="/leaderboard" component={Leaderboard} />
