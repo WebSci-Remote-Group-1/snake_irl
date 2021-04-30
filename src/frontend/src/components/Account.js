@@ -25,11 +25,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center'
   },
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
-  }
+  error: {
+    color: "red"
+  },
+  success: {
+    color: "green"
+  },
 }));
 
 const Account = () => {
@@ -42,8 +43,8 @@ const Account = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
-  const [lat, setLat] = useState(0.0);
-  const [long, setLong] = useState(0.0);
+  const [lat, setLat] = useState("");
+  const [long, setLong] = useState("");
   const [bio, setBio] = useState("");
   const [privacySettings, setPrivacySettings] = useState({
     showCreated: true,
@@ -57,6 +58,9 @@ const Account = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConf, setNewPasswordConf] = useState("");
+  const [formErr, setFormErr] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
+  const [passErr, setPassErr] = useState("");
 
   /*
   When the page loads grab the user account data
@@ -83,6 +87,7 @@ const Account = () => {
   const fetchUserData = async () => {
     axios.get(`/server/getActiveUser`).then((res) => {
       setUserData({
+        id: res.data._id,
         username: res.data.username,
         homebase: res.data.demographics.homebase,
         bio: res.data.bio,
@@ -112,15 +117,55 @@ const Account = () => {
   When the update button is pressed for account data, update it
   Return success on complete, or error on error
   */
-  const updateUserData = async () => {
+  const updateUserData = () => {
+    let formError = validateAccountSettings();
 
+    if (formError !== "") {
+      setFormErr(formError);
+      setFormSuccess("");
+      return;
+    }
+    else {
+      setFormErr("");
+      setFormSuccess("");
+    }
+
+    axios.post(`/server/updateUserData`, {
+      lat: parseFloat(lat),
+      long: parseFloat(long),
+      bio: bio,
+      privacy: privacySettings
+    }).then((res) => {
+      setFormSuccess("Your account has been updated.");
+    }).catch((err) => {
+      setFormErr("An error has occured while trying to update your account, please try again later.")
+      console.log(err);
+    });
   };
+
+  /*
+  Validate form data for account settings
+  */
+  const validateAccountSettings = () => {
+    const regex = new RegExp('^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$');
+
+    // Check homebase latitude
+    if (!regex.test(lat)) return "Latitude must be a float.";
+
+    // Check homebase longitude
+    if (!regex.test(long)) return "Longitude must be a float.";
+
+    // Check bio
+    if (bio.length > maxBioLength) return `Bio must be ${maxBioLength} characters or less.`
+
+    return "";
+  }
 
   /*
   When the update password button is pressed, update it
   Return success on complete, or error on error
   */
-  const updateUserPassword = async () => {
+  const updateUserPassword = () => {
 
   };
 
@@ -174,7 +219,6 @@ const Account = () => {
                         <Input 
                           id="longitude" 
                           name="longitude" 
-                          inputProps={{pattern: "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$"}}
                           value={long} 
                           onChange={(e) => inputTextHandler(e, setLong)} 
                         />
@@ -212,10 +256,37 @@ const Account = () => {
                     <Button
                       variant="contained"
                       color="secondary"
+                      onClick={() => updateUserData()}
                     >
                       Apply Changes
                     </Button>
                   </Grid>
+                  {formErr !== "" ?
+                    <Grid item xs={12}>
+                      <Typography
+                        variant="subtitle2"
+                        component="div"
+                        className={classes.error}
+                      >
+                        {formErr}
+                      </Typography>
+                    </Grid>
+                  :
+                    <></>
+                  }
+                  {formSuccess !== "" ?
+                    <Grid item xs={12}>
+                      <Typography
+                        variant="subtitle2"
+                        component="div"
+                        className={classes.success}
+                      >
+                        {formSuccess}
+                      </Typography>
+                    </Grid>
+                  :
+                    <></>
+                  }
                 </Grid>
               </form>
             </Grid>

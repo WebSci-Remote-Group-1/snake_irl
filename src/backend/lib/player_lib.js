@@ -53,6 +53,33 @@ const createUser = (userDetails) =>
     });
   });
 
+// Updates a user's account data that they can edit
+const updateUserData = (userDetails) => 
+  new Promise((resolve, reject) => {
+    const updateDoc = {
+      "$set": {
+        "demographics.homebase.lat": userDetails.lat,
+        "demographics.homebase.long": userDetails.long,
+        "bio": userDetails.bio,
+        "privacy": userDetails.privacy,
+      },
+    };
+    const queryDoc = {
+      "_id": new ObjectID(userDetails.id),
+    };
+    MGDB_Core.updateOne(
+      mongoURI,
+      config.get('database.player_accounts'),
+      queryDoc,
+      updateDoc
+    ).then((resp) => {
+      console.log(resp);
+      resolve(resp);
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+
 // Fetch user with username == usrname from db, optionally query can be filtered
 const fetchUser = (usrname, filter = null) =>
   MGDB_Core.findOne(
@@ -125,6 +152,7 @@ const fetchUserByAuth = (auth) =>
 
 module.exports = {
   createUser,
+  updateUserData,
   fetchUser,
   fetchUsers,
   userExists,

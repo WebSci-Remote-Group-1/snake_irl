@@ -120,6 +120,23 @@ app.get(internal_path + '/getActiveUser', (req, res) => {
     });
 });
 
+// Updates a user's profile data
+app.post(internal_path + '/updateUserData', (req, res) => {
+  const { auth } = req.cookies;
+  if (!auth) {
+    res.status(400).json({});
+    return;
+  }
+  MGDB_PlayerInterface.updateUserData({...req.body, id: auth})
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+});
+
 /* Register a new user
  *
  * Note that this endpoint does not set a user auth cookie, users will need to
