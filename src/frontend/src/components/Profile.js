@@ -11,18 +11,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { useParams, useHistory } from 'react-router-dom';
 
-/* 
-add route, id as param? if so check to see if id on page is player id and give them the edit button
-  if not that then like a myprofile route instead? going to /profile/thisuserid redirects to myprofile
-give players ability to add a bio, check it for XSS/mongo injections
-change profile pictures? let them upload their own? or only select from preexisiting
-add corresponding edit profile page
-theres a socialmedia thing in DB so display that stuff?
-display created maps and favorite maps. a timeline
-privacy settings? display or not display certain profile settings
-lets make a folder in components to organize this stuff
-*/
-
 const useStyles = makeStyles(() => ({
   loading: {
     margin: 'auto',
@@ -55,7 +43,7 @@ const Profile = () => {
   fetch user data function
   on success set the userData state with select user data
   on failure log the error to the console and redirect to the homepage
-  Converts point to a comma delimited format
+  Converts points to a comma delimited format
   Converts playtime from milliseconds to human readbale dhms format
   Pulls data for favorite and created maps
   */
@@ -71,6 +59,7 @@ const Profile = () => {
         numFriends: res.data.friends.length,
         favMaps: await fetchMaps(res.data.maps.favoriteMaps),
         maps: await fetchMaps(res.data.maps.createdMaps),
+        privacy: res.data.privacy,
         socials: res.data.socialMedia
       });
       setIsLoading(false);
@@ -195,79 +184,87 @@ const Profile = () => {
                 </Grid>
               </Paper>
             </Grid>
-            {userData.maps.length > 0 ?
-              <Grid container item spacing={1} xs={12}>
-                <Grid item xs={12}>
-                  <Typography
-                    variant="h3"
-                    component="div"
-                  >
-                    Created Maps
-                  </Typography>
-                </Grid>
-                {userData.maps.map((item) => (
-                  <Grid item xs={12} key={item.id}>
-                    <Card className={classes.maps}>
-                      <Grid container spacing={1}>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant="h6"
-                            component="div"
-                          >
-                            {item.title}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant="subtitle2"
-                            component="div"
-                          >
-                            {item.description}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Card>
+            {userData.privacy.showCreated ? 
+              (userData.maps.length > 0 ?
+                <Grid container item spacing={1} xs={12}>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h3"
+                      component="div"
+                    >
+                      Created Maps
+                    </Typography>
                   </Grid>
-                ))}
-              </Grid>
+                  {userData.maps.map((item) => (
+                    <Grid item xs={12} key={item.id}>
+                      <Card className={classes.maps}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={12}>
+                            <Typography
+                              variant="h6"
+                              component="div"
+                            >
+                              {item.title}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography
+                              variant="subtitle2"
+                              component="div"
+                            >
+                              {item.description}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              :
+                <></>
+              )
             :
               <></>
             }
-            {userData.maps.length > 0 ?
+            {userData.privacy.showFavorites ?
+              (userData.maps.length > 0 ?
               <Grid container item spacing={1} xs={12}>
-                <Grid item xs={12}>
-                  <Typography
-                    variant="h3"
-                    component="div"
-                  >
-                    Favorite Maps
-                  </Typography>
-                </Grid>
-                {userData.favMaps.map((item) => (
-                  <Grid item xs={12} key={item.id}>
-                    <Card className={classes.maps}>
-                      <Grid container spacing={1}>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant="h6"
-                            component="div"
-                          >
-                            {item.title}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant="subtitle2"
-                            component="div"
-                          >
-                            {item.description}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Card>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h3"
+                      component="div"
+                    >
+                      Favorite Maps
+                    </Typography>
                   </Grid>
-                ))}
-              </Grid>
+                  {userData.favMaps.map((item) => (
+                    <Grid item xs={12} key={item.id}>
+                      <Card className={classes.maps}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={12}>
+                            <Typography
+                              variant="h6"
+                              component="div"
+                            >
+                              {item.title}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography
+                              variant="subtitle2"
+                              component="div"
+                            >
+                              {item.description}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              :
+                <></>
+              )
             :
               <></>
             }
