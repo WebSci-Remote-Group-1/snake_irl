@@ -98,7 +98,6 @@ class GameMap extends Component {
       lat: crd.latitude,
       lon: crd.longitude,
     }
-
     this.setState({latlng: currLatlng});
     var points = [
       {
@@ -121,7 +120,7 @@ class GameMap extends Component {
         longitude: crd.longitude
       }
     ]
-    if (HaversineGeolocation.getDistanceBetween(poiPoints[0], poiPoints[1], 'm') < crd.accuracy){
+    if (HaversineGeolocation.getDistanceBetween(poiPoints[0], poiPoints[1], 'm') < 15 + crd.accuracy){
       var updateSnake = this.state.internalSnake;
       updateSnake.push(updateSnake[updateSnake.length - 1]);
       this.setState({
@@ -141,7 +140,7 @@ class GameMap extends Component {
       })
     }
     var m_diff = HaversineGeolocation.getDistanceBetween(points[0], points[1], 'm')
-    if (m_diff >= this.state.segLen){
+    if (m_diff >= (15 + crd.accuracy)){
       this.setState({
         distTraveled: this.state.distTraveled + m_diff
       }) // nothing after this in this function requires this, and by the time calcPlace() is called again it should be done, given repeatTimer taking 500ms
