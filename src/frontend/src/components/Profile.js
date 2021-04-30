@@ -173,7 +173,7 @@ const Profile = () => {
                       {userData.username}
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       component="div"
@@ -181,7 +181,7 @@ const Profile = () => {
                       {userData.points} points
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     <Typography
                       variant="subtitle1"
                       component="div"
