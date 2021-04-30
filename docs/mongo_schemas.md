@@ -31,6 +31,11 @@
           createdMaps: (Array (ObjectID)) Object IDs of documents in the "maps" collection of this user's created maps
         }
   socialMedia: (Array ( {socialMediaName (String): accountUsername (String)} )) Linked social media accounts
+  bio: (String) A user's short biography
+  privacy: {
+              showCreated: (boolean) Whether the user's created maps are displayed publicly
+              showFavorites: (boolean) Whether the user's favorite maps are displayed publicly
+           }
  
 }
 ```

@@ -37,6 +37,11 @@ const createUser = (userDetails) =>
         createdMaps: [],
       },
       socialMedia: [],
+      bio: "",
+      privacy: {
+        showCreated: true,
+        showFavorites: true,
+      },
     };
     MGDB_Core.insertOne(
       mongoURI,
@@ -45,6 +50,57 @@ const createUser = (userDetails) =>
     ).then((resp) => {
       console.log(resp);
       resolve(resp.insertedCount !== 0);
+    });
+  });
+
+// Updates a user's account data that they can edit
+const updateUserData = (userDetails) => 
+  new Promise((resolve, reject) => {
+    const updateDoc = {
+      "$set": {
+        "demographics.homebase.lat": userDetails.lat,
+        "demographics.homebase.long": userDetails.long,
+        "bio": userDetails.bio,
+        "privacy": userDetails.privacy,
+      },
+    };
+    const queryDoc = {
+      "_id": new ObjectID(userDetails.id),
+    };
+    MGDB_Core.updateOne(
+      mongoURI,
+      config.get('database.player_accounts'),
+      queryDoc,
+      updateDoc
+    ).then((resp) => {
+      console.log(resp);
+      resolve(resp);
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+
+// Update a user's password
+const updateUserPassword = (userDetails) => 
+  new Promise((resolve, reject) => {
+    const updateDoc = {
+      "$set": {
+        "password": userDetails.password,
+      },
+    };
+    const queryDoc = {
+      "_id": new ObjectID(userDetails.id),
+    };
+    MGDB_Core.updateOne(
+      mongoURI,
+      config.get('database.player_accounts'),
+      queryDoc,
+      updateDoc
+    ).then((resp) => {
+      console.log(resp);
+      resolve(resp);
+    }).catch((err) => {
+      reject(err);
     });
   });
 
@@ -123,6 +179,8 @@ const fetchLeaderboard = ( username ) =>
 
 module.exports = {
   createUser,
+  updateUserData,
+  updateUserPassword,
   fetchUser,
   fetchUsers,
   userExists,

@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 // import Header from './shared/header.js';
 // import PageBody from './shared/pagebody.js';
 import { Button, Card, Typography, TextField, Toolbar, Grid, FormControl, InputLabel, Select, MenuItem, Menu, IconButton } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
 import axios from 'axios';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -366,6 +367,7 @@ class UserManager extends Component {
     API.post('/server/logout').then(() => {
       console.log("Logged out");
       this.updateActiveUser();
+      window.location.assign('/');
     })
     this.handleClose();
   }
@@ -419,7 +421,8 @@ class UserManager extends Component {
           {user ? (
             user._id ? 
               [
-                <MenuItem onClick={() => this.handleOpenProfile()}>Profile</MenuItem>,
+                <Link href={`/profiles/${user.username}`} color="inherit" underline="none"><MenuItem>Profile</MenuItem></Link>,
+                <Link href="/account" color="inherit" underline="none"><MenuItem>Account</MenuItem></Link>,
                 <MenuItem onClick={() => this.handleLogout()}>Log out</MenuItem>,
               ] 
             : 
