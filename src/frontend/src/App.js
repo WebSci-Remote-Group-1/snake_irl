@@ -3,6 +3,7 @@ import Index from '@components/DesktopIndex';
 import { Admin } from '@components/Admin';
 import MobileIndex from '@components/MobileIndex';
 import Profile from '@components/Profile';
+import Account from '@components/Account';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Media from 'react-media'; // add Media
 
@@ -27,6 +28,7 @@ function App() {
                     <Route exact path="/" component={MobileIndex} />
                     <Route path="/play" component={Game} />
                     <Route exact path="/profiles/:id" component={Profile} />
+                    <Route exact path="/account" component={Account} />
                   </Switch>
                 ) : (
                   <Switch>
@@ -36,6 +38,7 @@ function App() {
                     <Route path="/create" component={Create} />
                     <Route path="/admin" component={Admin} />
                     <Route exact path="/profiles/:id" component={Profile} />
+                    <Route exact path="/account" component={Account} />
                   </Switch>
                 )
               }

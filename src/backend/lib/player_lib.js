@@ -37,6 +37,11 @@ const createUser = (userDetails) =>
         createdMaps: [],
       },
       socialMedia: [],
+      bio: "",
+      privacy: {
+        showCreated: true,
+        showFavorites: true,
+      },
     };
     MGDB_Core.insertOne(
       mongoURI,

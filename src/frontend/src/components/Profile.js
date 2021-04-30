@@ -134,6 +134,9 @@ const Profile = () => {
     return formattedString;
   };
 
+  /*
+  Fetch each map in a list of map ObjectIDs
+  */
   const fetchMaps = async (mapids) => {
     let maps = [];
     for (let i = 0; i < mapids.length; i++) {

@@ -421,6 +421,7 @@ class UserManager extends Component {
             user._id ? 
               [
                 <Link href={`/profiles/${user.username}`} color="inherit" underline="none"><MenuItem>Profile</MenuItem></Link>,
+                <Link href="/account" color="inherit" underline="none"><MenuItem>Account</MenuItem></Link>,
                 <MenuItem onClick={() => this.handleLogout()}>Log out</MenuItem>,
               ] 
             : 
