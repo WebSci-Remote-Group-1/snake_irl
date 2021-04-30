@@ -55,6 +55,7 @@ const Profile = () => {
         username: res.data.username,
         points: res.data.points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
         playtime: convertMS(res.data.totalPlaytime),
+        bio: res.data.bio,
         age: res.data.demographics.age,
         numFriends: res.data.friends.length,
         favMaps: await fetchMaps(res.data.maps.favoriteMaps),
@@ -163,6 +164,14 @@ const Profile = () => {
                       component="div"
                     >
                       {userData.username}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                    >
+                      {userData.bio}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
