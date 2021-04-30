@@ -16,6 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
+import { useHistory } from 'react-router-dom';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Account = () => {
   const classes = useStyles();
+  const history = useHistory();
   const maxBioLength = 128;
   const privacyLabels = {
     showCreated: "Show created maps on profile",
@@ -61,6 +63,7 @@ const Account = () => {
   const [formErr, setFormErr] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
   const [passErr, setPassErr] = useState("");
+  const [passSuccess, setPassSuccess] = useState("");
 
   /*
   When the page loads grab the user account data
@@ -96,6 +99,7 @@ const Account = () => {
       setIsLoading(false);
     }).catch((err) => {
       console.error(err);
+      history.push('/');
     });
   };
 
@@ -139,7 +143,7 @@ const Account = () => {
       setFormSuccess("Your account has been updated.");
     }).catch((err) => {
       setFormErr("An error has occured while trying to update your account, please try again later.")
-      console.log(err);
+      console.error(err);
     });
   };
 
@@ -166,7 +170,49 @@ const Account = () => {
   Return success on complete, or error on error
   */
   const updateUserPassword = () => {
+    let formError = validatePasswordFields();
 
+    if (formError !== "") {
+      setPassErr(formError);
+      setPassSuccess("");
+      return;
+    }
+    else {
+      setPassErr("");
+      setPassSuccess("");
+    }
+
+    axios.post(`/server/updateUserPassword`, {
+      old: oldPassword,
+      new: newPassword,
+      newConf: newPasswordConf,
+    }).then((res) => {
+      if (res.status === 400) {
+        setPassErr("The old password input was invalid.");
+      }
+      else if (res.status !== 200) {
+        setPassErr("An internal error occurred. Please try again later.");
+      }
+      else {
+        setPassSuccess("Your password has been updated.");
+      }
+    }).catch((err) => {
+      setPassErr("An error has occured while trying to update your account, please try again later.");
+      console.error(err);
+    });
+  };
+
+  /*
+  Validate form data for password change
+  */
+  const validatePasswordFields = () => {
+    // Check to see if any of the fields are blank
+    if (oldPassword.trim() === "" || newPassword.trim() === "" || newPasswordConf.trim() === "") return "Old password, new password, and new password confirmation must not be blank.";
+
+    // Check to see if new password matches new confirmed password
+    if (newPassword !== newPasswordConf) return "Password confirmation does not match.";
+
+    return "";
   };
 
   return (
@@ -369,10 +415,37 @@ const Account = () => {
                     <Button
                       variant="contained"
                       color="secondary"
+                      onClick={() => updateUserPassword()}
                     >
                       Change Password
                     </Button>
                   </Grid>
+                  {passErr !== "" ?
+                    <Grid item xs={12}>
+                      <Typography
+                        variant="subtitle2"
+                        component="div"
+                        className={classes.error}
+                      >
+                        {passErr}
+                      </Typography>
+                    </Grid>
+                  :
+                    <></>
+                  }
+                  {passSuccess !== "" ?
+                    <Grid item xs={12}>
+                      <Typography
+                        variant="subtitle2"
+                        component="div"
+                        className={classes.success}
+                      >
+                        {passSuccess}
+                      </Typography>
+                    </Grid>
+                  :
+                    <></>
+                  }
                 </Grid>
               </form>
             </Grid>

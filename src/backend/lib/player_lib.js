@@ -80,6 +80,30 @@ const updateUserData = (userDetails) =>
     });
   });
 
+// Update a user's password
+const updateUserPassword = (userDetails) => 
+  new Promise((resolve, reject) => {
+    const updateDoc = {
+      "$set": {
+        "password": userDetails.password,
+      },
+    };
+    const queryDoc = {
+      "_id": new ObjectID(userDetails.id),
+    };
+    MGDB_Core.updateOne(
+      mongoURI,
+      config.get('database.player_accounts'),
+      queryDoc,
+      updateDoc
+    ).then((resp) => {
+      console.log(resp);
+      resolve(resp);
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+
 // Fetch user with username == usrname from db, optionally query can be filtered
 const fetchUser = (usrname, filter = null) =>
   MGDB_Core.findOne(
@@ -153,6 +177,7 @@ const fetchUserByAuth = (auth) =>
 module.exports = {
   createUser,
   updateUserData,
+  updateUserPassword,
   fetchUser,
   fetchUsers,
   userExists,

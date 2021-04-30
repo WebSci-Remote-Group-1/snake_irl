@@ -124,7 +124,7 @@ app.get(internal_path + '/getActiveUser', (req, res) => {
 app.post(internal_path + '/updateUserData', (req, res) => {
   const { auth } = req.cookies;
   if (!auth) {
-    res.status(400).json({});
+    res.status(401).json({});
     return;
   }
   MGDB_PlayerInterface.updateUserData({...req.body, id: auth})
@@ -133,7 +133,39 @@ app.post(internal_path + '/updateUserData', (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).json(err);
+      res.status(500).json({ error: err });
+    });
+});
+
+// Updates a user's password
+app.post(internal_path + '/updateUserPassword', (req, res) => {
+  const { auth } = req.cookies;
+  if (!auth) {
+    res.status(401).json({});
+    return;
+  }
+  MGDB_PlayerInterface.fetchUserByAuth(auth)
+    .then((user) => {
+      bcrypt.compare(req.body.old, user.password, (err, result) => {
+        if (err) res.status(400).json({ error: err });
+        else if (result) {
+          bcrypt.hash(req.body.new, 10, (errr, hash) => {
+            if (errr) res.status(500).json({ error: errr });
+            MGDB_PlayerInterface.updateUserPassword({ id: auth, password: hash })
+              .then((response) => {
+                res.status(200).json(response);
+              })
+              .catch((errrr) => {
+                console.error(errrr);
+                res.status(500).json({ error: err });
+              });
+          });
+        }
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: err });
     });
 });
 
