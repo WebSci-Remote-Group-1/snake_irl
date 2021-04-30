@@ -174,6 +174,9 @@ const fetchUserByAuth = (auth) =>
     _id: new ObjectID(auth),
   });
 
+const fetchLeaderboard = ( username ) => 
+	MGDB_Core.find( mongoURI, config.get('database.player_accounts'), {}, {projection: {demographics: 0, socialMedia: 0, maps: 0, password: 0}}, { points: -1 }, 10 );
+
 module.exports = {
   createUser,
   updateUserData,
@@ -184,4 +187,5 @@ module.exports = {
   userLogin,
   fetchUserByAuth,
   updateUserTime,
+	fetchLeaderboard
 };
