@@ -147,7 +147,7 @@ app.post(internal_path + '/updateUserPassword', (req, res) => {
   MGDB_PlayerInterface.fetchUserByAuth(auth)
     .then((user) => {
       bcrypt.compare(req.body.old, user.password, (err, result) => {
-        if (err) res.status(400).json({ error: err });
+        if (err) res.status(500).json({ error: err });
         else if (result) {
           bcrypt.hash(req.body.new, 10, (errr, hash) => {
             if (errr) res.status(500).json({ error: errr });
@@ -160,6 +160,9 @@ app.post(internal_path + '/updateUserPassword', (req, res) => {
                 res.status(500).json({ error: err });
               });
           });
+        }
+        else {
+          res.status(400).json({});
         }
       });
     })

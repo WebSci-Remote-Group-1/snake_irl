@@ -197,7 +197,7 @@ const Account = () => {
         setPassSuccess("Your password has been updated.");
       }
     }).catch((err) => {
-      setPassErr("An error has occured while trying to update your account, please try again later.");
+      setPassErr("An error has occured while trying to update your password, check the information you submitted and try again later.");
       console.error(err);
     });
   };
