@@ -177,6 +177,9 @@ const fetchUserByAuth = (auth) =>
 const fetchLeaderboard = ( username ) => 
 	MGDB_Core.find( mongoURI, config.get('database.player_accounts'), {}, {projection: {demographics: 0, socialMedia: 0, maps: 0, password: 0}}, { points: -1 }, 10 );
 
+const addMapToUser = (auth, mapID) => MGDB_Core.updateOne(mongoURI, config.get('database.player_accounts'), {_id: auth}, {$push: {"maps.createdMaps": mapID}});
+
+const removeMapFromUser = (auth, mapID) => MGDB_Core.updateOne(mongoURI, config.get('database.player_accounts'), {_id: auth}, {$pull: {"maps.createdMaps": mapID}});
 module.exports = {
   createUser,
   updateUserData,
@@ -187,5 +190,7 @@ module.exports = {
   userLogin,
   fetchUserByAuth,
   updateUserTime,
-	fetchLeaderboard
+	fetchLeaderboard,
+  addMapToUser,
+  removeMapFromUser,
 };
